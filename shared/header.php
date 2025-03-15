@@ -39,6 +39,8 @@
                         <a class="nav-link" href="registro.php">Registro</a>
                     </li>
                     <li class="nav-item">
+                    <a class="nav-link" href="mapa.php">Mapa</a>
+                    <li class="nav-item">
                         <a class="nav-link" href="interes.php">¿Por qué elegirnos?</a>
                     </li>
                     <li class="nav-item">
