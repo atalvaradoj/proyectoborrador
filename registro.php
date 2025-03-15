@@ -1,3 +1,5 @@
+<?php include "shared/header.php" ?>
+
 <!DOCTYPE html>
 <html>
 
@@ -38,3 +40,6 @@
 </body>
 
 </html>
+
+<!-- Footer -->
+<?php include "shared/footer.php" ?>
