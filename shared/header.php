@@ -11,7 +11,8 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
         body {
-            padding-top: 20px;
+            font-family: 'Arial', sans-serif;
+            margin-top: 20px;
         }
         .container {
             margin-top: 30px;
@@ -49,7 +50,7 @@
                         <a class="nav-link" href="formulario.php">Formulario</a>
                     </li>
                     <li class="nav-item">
-                    <a class="nav-link active" aria-current="page" href="servicios.php"> Servicios</a>
+                    <a class="nav-link" href="servicios.php"> Servicios</a>
                     </li>
                 </ul>
             </div>
