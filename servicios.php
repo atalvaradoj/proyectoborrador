@@ -141,7 +141,7 @@
                                     Si tienes alguna duda, puedes enviarnos un correo directamente a la Escuela y te ayudaremos con tu consulta.
                                 </li>
                             </ul>
-                            <a href="mapa.php" class="btn-ir-ahora">Ir ahora</a>
+                            <a href="apicontactenos.php" class="btn-ir-ahora">Ir ahora</a>
                         </div>
                     </div>
                 </div>
