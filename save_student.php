@@ -1,24 +1,18 @@
 <?php
+// save_student.php
 session_start();
+include "includes/db_config.php";
 
-// Configuración de la conexión a la base de datos
-$servername = "localhost";
-$username = "root";
-$password = "";
-$dbname = "sistema_academico";
-
-// Crear conexión
-$conn = new mysqli($servername, $username, $password, $dbname);
-
-// Verificar conexión
-if ($conn->connect_error) {
-    $_SESSION['error_message'] = "Error de conexión: " . $conn->connect_error;
-    header("Location: estudiantes.php");
-    exit;
+// Verificar si la carpeta uploads existe, si no, crearla
+if (!file_exists('uploads')) {
+    mkdir('uploads', 0777, true);
 }
 
 // Procesar los datos del formulario
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    // Obtener conexión a la base de datos
+    $conn = getConnection();
+    
     // Recoger los datos del formulario
     $studentId = $_POST['studentId'];
     $documentType = $_POST['documentType'];
@@ -38,11 +32,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $foto = "";
     if (isset($_FILES['studentPhoto']) && $_FILES['studentPhoto']['error'] == 0) {
         $target_dir = "uploads/";
-        
-        // Crear el directorio si no existe
-        if (!file_exists($target_dir)) {
-            mkdir($target_dir, 0777, true);
-        }
         
         // Generar un nombre único para el archivo
         $foto = $target_dir . uniqid() . "_" . basename($_FILES["studentPhoto"]["name"]);
@@ -92,6 +81,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if ($stmt->execute()) {
         // Guardar mensaje de éxito en la sesión
         $_SESSION['success_message'] = "El estudiante ha sido guardado correctamente.";
+        $_SESSION['redirect_url'] = "estudiantes.php"; // Opcional: redirigir a otra página
         header("Location: estudiantes.php");
         exit;
     } else {
@@ -101,14 +91,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         exit;
     }
     
-    // Cerrar la sentencia
+    // Cerrar la sentencia y la conexión
     $stmt->close();
+    $conn->close();
 } else {
     // Si no es una solicitud POST, redirigir a la página principal
     header("Location: estudiantes.php");
     exit;
 }
-
-// Cerrar la conexión
-$conn->close();
 ?>
