@@ -223,4 +223,141 @@ function editStudent(studentId) {
                 document.getElementById('addStudentForm').action = 'update_student.php';
                 
                 // Cambiar título del modal
-                document.getElementById('addStudent
+                document.getElementById('addStudentModalLabel').innerHTML = `
+                    <i class="fas fa-edit me-2"></i> Editar Estudiante
+                `;
+                
+                // Cambiar texto del botón de guardar
+                document.getElementById('saveStudentBtn').innerHTML = `
+                    <i class="fas fa-save me-1"></i> Actualizar Estudiante
+                `;
+                
+                // Deshabilitar campo de ID (no debe cambiar)
+                document.getElementById('studentId').readOnly = true;
+                
+                // Mostrar modal
+                const editModal = new bootstrap.Modal(document.getElementById('addStudentModal'));
+                editModal.show();
+            } else {
+                alert('Error al cargar datos del estudiante: ' + data.message);
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+        });
+}
+
+// Función para eliminar un estudiante
+function deleteStudent(studentId) {
+    if (confirm('¿Está seguro de que desea eliminar este estudiante? Esta acción no se puede deshacer.')) {
+        const formData = new FormData();
+        formData.append('studentId', studentId);
+        
+        fetch('delete_student.php', {
+            method: 'POST',
+            body: formData
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                alert('Estudiante eliminado correctamente');
+                loadStudents(); // Recargar lista de estudiantes
+            } else {
+                alert('Error al eliminar estudiante: ' + data.message);
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+        });
+    }
+}
+
+// Función para formatear fechas
+function formatDate(dateString) {
+    if (!dateString) return 'No disponible';
+    
+    const date = new Date(dateString);
+    return date.toLocaleDateString('es-ES', {
+        day: '2-digit',
+        month: '2-digit',
+        year: 'numeric'
+    });
+}
+
+// Función para obtener texto del género
+function getGenderText(genderCode) {
+    switch(genderCode) {
+        case 'M': return 'Masculino';
+        case 'F': return 'Femenino';
+        case 'O': return 'Otro';
+        default: return 'No especificado';
+    }
+}
+
+// Función para resetear el formulario cuando se abre el modal de agregar
+document.getElementById('addStudentModal').addEventListener('hidden.bs.modal', function () {
+    // Resetear formulario
+    document.getElementById('addStudentForm').reset();
+    
+    // Resetear vista previa de foto
+    document.getElementById('photoPreview').innerHTML = `
+        <div class="photo-preview-text">
+            <i class="fas fa-camera fa-2x mb-2"></i><br>
+            Haga clic para seleccionar una foto
+        </div>
+    `;
+    
+    // Eliminar campo oculto de foto actual si existe
+    const currentPhotoInput = document.querySelector('input[name="currentPhoto"]');
+    if (currentPhotoInput) {
+        currentPhotoInput.remove();
+    }
+    
+    // Restaurar acción del formulario
+    document.getElementById('addStudentForm').action = 'save_student.php';
+    
+    // Restaurar título del modal
+    document.getElementById('addStudentModalLabel').innerHTML = `
+        <i class="fas fa-user-plus me-2"></i> Agregar Nuevo Estudiante
+    `;
+    
+    // Restaurar texto del botón de guardar
+    document.getElementById('saveStudentBtn').innerHTML = `
+        <i class="fas fa-save me-1"></i> Guardar Estudiante
+    `;
+    
+    // Habilitar campo de ID
+    document.getElementById('studentId').readOnly = false;
+});
+
+// Manejar respuesta después de enviar formulario
+document.getElementById('addStudentForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    
+    const formData = new FormData(this);
+    
+    fetch(this.action, {
+        method: 'POST',
+        body: formData
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            alert(data.message);
+            
+            // Cerrar modal
+            const modal = bootstrap.Modal.getInstance(document.getElementById('addStudentModal'));
+            modal.hide();
+            
+            // Recargar lista de estudiantes
+            loadStudents();
+        } else {
+            alert('Error: ' + data.message);
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert('Ha ocurrido un error al procesar la solicitud');
+    });
+});
+
