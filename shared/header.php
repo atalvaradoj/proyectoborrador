@@ -42,6 +42,11 @@
                     <a class="nav-link" href="mapa.php">Mapa</a>
                     <li class="nav-item">
                         <a class="nav-link" href="interes.php">¿Por qué elegirnos?</a>
+                    <li class="nav-item">
+                        <a class="nav-link" href="testimonios.php">Testimonios</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="formulario.php">Formulario</a>
                     </li>
                     <li class="nav-item">
                     <a class="nav-link active" aria-current="page" href="servicios.php"> Servicios</a>
