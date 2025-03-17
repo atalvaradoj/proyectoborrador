@@ -53,6 +53,8 @@
                     <a class="nav-link" href="servicios.php"> Servicios</a>
                     <li class="nav-item">
                     <a class="nav-link" href="docentes.php"> Docentes</a>
+                    <li class="nav-item">
+                    <a class="nav-link" href="estudiantes.php"> Estudiantes</a>
                     </li>
                 </ul>
             </div>
