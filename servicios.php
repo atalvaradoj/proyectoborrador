@@ -72,9 +72,8 @@
                 <i class="fa-solid fa-comments fa-icon"></i>
                 <h2 class="section-title">Comunicación</h2>
                 <ul>
-                    <li><strong>Mensajería interna:</strong> Los estudiantes, profesores y administrativos pueden comunicarse de forma privada a través de mensajes dentro del sistema.</li>
-                    <li><strong>Foros y grupos de discusión:</strong> Espacios donde los estudiantes y profesores pueden intercambiar ideas o resolver dudas sobre los temas de los cursos.</li>
-                    <li><strong>Notificaciones y alertas:</strong> Sistema de notificaciones para recordar fechas importantes como plazos de matrícula, exámenes o actividades.</li>
+                    <li><strong>Formulario de Contáctenos:</strong> Si tienes alguna duda, puedes enviarnos un correo directamente a la Escuela y te ayudaremos con tu consulta.</li>
+                    <a href="mapa.php" class="btn-ir-ahora">Ir ahora</a>
                 </ul>
             </div>
 
@@ -92,11 +91,10 @@
             <!-- Sección de Biblioteca y Recursos -->
             <div class="col-md-6 col-lg-3 section">
                 <i class="fa-solid fa-book fa-icon"></i>
-                <h2 class="section-title">Biblioteca y Recursos</h2>
+                <h2 class="section-title">Biblioteca</h2>
                 <ul>
-                    <li><strong>Catálogo de la biblioteca:</strong> Los estudiantes pueden buscar libros, revistas y otros materiales académicos disponibles en la biblioteca.</li>
-                    <li><strong>Préstamos en línea:</strong> Solicitar préstamos de libros y otros recursos académicos.</li>
-                    <li><strong>Acceso a contenido digital:</strong> Acceso a libros electrónicos, revistas académicas, y otros recursos en línea proporcionados por la institución.</li>
+                    <li><strong>Catálogo de la biblioteca:</strong> Consulta nuestra biblioteca en linea.</li>
+                    <a href="biblioteca.php" class="btn-ir-ahora">Ir ahora</a>
                 </ul>
             </div>
 
