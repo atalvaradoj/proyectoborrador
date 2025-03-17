@@ -158,7 +158,7 @@
                                     Realiza el pago de tu matrícula en línea.
                                 </li>
                             </ul>
-                            <a href="pago.php" class="btn-ir-ahora">Ir ahora</a>
+                            <a href="pagoMatricula.php" class="btn-ir-ahora">Ir ahora</a>
                         </div>
                     </div>
                 </div>
