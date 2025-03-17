@@ -9,7 +9,74 @@
     <title>Administración de Estudiantes - Sistema Académico</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <?php
+    // Iniciar sesión para poder almacenar mensajes entre redirecciones
+    session_start();
+
+    // Verificar si hay mensajes almacenados en la sesión
+    $showMessage = false;
+    $messageType = '';
+    $messageText = '';
+
+    // Comprobar si hay un mensaje de éxito en la sesión
+    if (isset($_SESSION['success_message'])) {
+        $showMessage = true;
+        $messageType = 'success';
+        $messageText = $_SESSION['success_message'];
+
+        // Eliminar el mensaje de la sesión para que no se muestre nuevamente
+        unset($_SESSION['success_message']);
+
+        // Configurar redirección después de 3 segundos
+        echo '<script>
+        setTimeout(function() {
+            window.location.href = "estudiantes.php";
+        }, 3000);
+    </script>';
+    }
+
+    // Comprobar si hay un mensaje de error en la sesión
+    if (isset($_SESSION['error_message'])) {
+        $showMessage = true;
+        $messageType = 'danger';
+        $messageText = $_SESSION['error_message'];
+
+        // Eliminar el mensaje de la sesión para que no se muestre nuevamente
+        unset($_SESSION['error_message']);
+    }
+
+    // Mostrar el mensaje si existe
+    if ($showMessage) {
+        echo '<div class="alert alert-' . $messageType . ' alert-dismissible fade show message-box" role="alert">
+            <strong>' . ($messageType == 'success' ? '¡Éxito!' : '¡Error!') . '</strong> ' . htmlspecialchars($messageText) . '
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+          </div>';
+    }
+    ?>
+
     <style>
+        .message-box {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 9999;
+            width: 350px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            animation: fadeIn 0.5s;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
         body {
             font-family: 'Arial', sans-serif;
             background-color: #f8f9fa;
@@ -332,6 +399,24 @@
 
 <body>
     <div class="container mt-4 mb-5">
+        <?php
+        // Mostrar mensajes de éxito o error
+        if (isset($_GET['success']) && $_GET['success'] == 1) {
+            echo '<div class="alert alert-success alert-dismissible fade show" role="alert">
+            <strong>¡Éxito!</strong> El estudiante ha sido guardado correctamente.
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+          </div>';
+        }
+
+        if (isset($_GET['error']) && $_GET['error'] == 1) {
+            $errorMsg = isset($_GET['message']) ? $_GET['message'] : 'Ha ocurrido un error al guardar el estudiante.';
+            echo '<div class="alert alert-danger alert-dismissible fade show" role="alert">
+            <strong>¡Error!</strong> ' . htmlspecialchars($errorMsg) . '
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+          </div>';
+        }
+        ?>
+
         <div class="page-header">
             <h1 class="page-title">Administración de Estudiantes</h1>
             <p class="page-subtitle">Gestión completa de la información de estudiantes</p>
@@ -715,6 +800,25 @@
                     photoPreview.innerHTML = `<img src="${event.target.result}" alt="Vista previa de foto">`;
                 }
                 reader.readAsDataURL(file);
+            }
+        });
+
+        // Código para manejar el envío del formulario
+        document.getElementById('saveStudentBtn').addEventListener('click', function() {
+            // Obtener el formulario
+            const form = document.getElementById('addStudentForm');
+
+            // Verificar si el formulario es válido
+            if (form.checkValidity()) {
+                // Mostrar indicador de carga
+                this.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Guardando...';
+                this.disabled = true;
+
+                // Enviar el formulario
+                form.submit();
+            } else {
+                // Mostrar validaciones del navegador
+                form.reportValidity();
             }
         });
     </script>

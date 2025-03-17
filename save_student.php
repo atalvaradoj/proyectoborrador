@@ -1,86 +1,114 @@
 <?php
-require_once 'db_connection.php';
+session_start();
 
-// Verificar si se recibió una solicitud POST
+// Configuración de la conexión a la base de datos
+$servername = "localhost";
+$username = "root";
+$password = "";
+$dbname = "sistema_academico";
+
+// Crear conexión
+$conn = new mysqli($servername, $username, $password, $dbname);
+
+// Verificar conexión
+if ($conn->connect_error) {
+    $_SESSION['error_message'] = "Error de conexión: " . $conn->connect_error;
+    header("Location: estudiantes.php");
+    exit;
+}
+
+// Procesar los datos del formulario
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    // Recoger los datos del formulario
+    $studentId = $_POST['studentId'];
+    $documentType = $_POST['documentType'];
+    $birthDate = $_POST['birthDate'];
+    $firstName = $_POST['firstName'];
+    $lastName = $_POST['lastName'];
+    $gender = $_POST['gender'];
+    $email = $_POST['email'];
+    $address = $_POST['address'];
+    $city = $_POST['city'];
+    $program = $_POST['program'];
+    $admissionDate = $_POST['admissionDate'];
+    $status = $_POST['status'];
+    $observations = isset($_POST['observations']) ? $_POST['observations'] : '';
     
-    // Obtener datos del formulario
-    $id_estudiante = $_POST['studentId'];
-    $tipo_documento = $_POST['documentType'];
-    $fecha_nacimiento = $_POST['birthDate'];
-    $nombres = $_POST['firstName'];
-    $apellidos = $_POST['lastName'];
-    $genero = $_POST['gender'];
-    $correo = $_POST['email'];
-    $direccion = $_POST['address'];
-    $ciudad = $_POST['city'];
-    $grado = $_POST['program']; // Programa académico
-    $fecha_ingreso = $_POST['admissionDate'];
-    $estado = $_POST['status'];
-    $comentarios = $_POST['observations'];
-    
-    // Manejo de la foto
-    $foto_path = "";
+    // Manejar la carga de la foto
+    $foto = "";
     if (isset($_FILES['studentPhoto']) && $_FILES['studentPhoto']['error'] == 0) {
-        $upload_dir = 'uploads/';
+        $target_dir = "uploads/";
         
-        // Crear directorio si no existe
-        if (!file_exists($upload_dir)) {
-            mkdir($upload_dir, 0777, true);
+        // Crear el directorio si no existe
+        if (!file_exists($target_dir)) {
+            mkdir($target_dir, 0777, true);
         }
         
-        // Generar nombre único para la foto
-        $foto_name = time() . '_' . basename($_FILES['studentPhoto']['name']);
-        $foto_path = $upload_dir . $foto_name;
+        // Generar un nombre único para el archivo
+        $foto = $target_dir . uniqid() . "_" . basename($_FILES["studentPhoto"]["name"]);
         
-        // Mover archivo subido al directorio de destino
-        if (move_uploaded_file($_FILES['studentPhoto']['tmp_name'], $foto_path)) {
+        // Mover el archivo subido al directorio de destino
+        if (move_uploaded_file($_FILES["studentPhoto"]["tmp_name"], $foto)) {
             // Archivo subido correctamente
         } else {
-            echo json_encode(['success' => false, 'message' => 'Error al subir la foto']);
+            $_SESSION['error_message'] = "Error al subir la foto.";
+            header("Location: estudiantes.php");
             exit;
         }
     }
     
-    // Preparar consulta SQL
-    $sql = "INSERT INTO estudiantes (ID_estudiante, Type_Doc, Fecha_Nac, Nombres, Apellidos, Genero, Correo, Direccion, Ciudad, Grado, Fecha_Ing, Estado, Comentarios, Foto) 
+    // Preparar la consulta SQL
+    $sql = "INSERT INTO estudiantes (ID_estudiante, Type_Doc, Fecha_Nac, Nombres, Apellidos, 
+            Genero, Correo, Direccion, Ciudad, Grado, Fecha_Ing, Estado, Comentarios, Foto) 
             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
     
-    // Preparar statement
+    // Preparar la sentencia
     $stmt = $conn->prepare($sql);
+    if (!$stmt) {
+        $_SESSION['error_message'] = "Error en la preparación de la consulta: " . $conn->error;
+        header("Location: estudiantes.php");
+        exit;
+    }
     
     // Vincular parámetros
     $stmt->bind_param("ssssssssssssss", 
-        $id_estudiante, 
-        $tipo_documento, 
-        $fecha_nacimiento, 
-        $nombres, 
-        $apellidos, 
-        $genero, 
-        $correo, 
-        $direccion, 
-        $ciudad, 
-        $grado, 
-        $fecha_ingreso, 
-        $estado, 
-        $comentarios, 
-        $foto_path
+        $studentId, 
+        $documentType, 
+        $birthDate, 
+        $firstName, 
+        $lastName, 
+        $gender, 
+        $email, 
+        $address, 
+        $city, 
+        $program, 
+        $admissionDate, 
+        $status, 
+        $observations, 
+        $foto
     );
     
-    // Ejecutar consulta
+    // Ejecutar la consulta
     if ($stmt->execute()) {
-        echo json_encode(['success' => true, 'message' => 'Estudiante guardado correctamente']);
+        // Guardar mensaje de éxito en la sesión
+        $_SESSION['success_message'] = "El estudiante ha sido guardado correctamente.";
+        header("Location: estudiantes.php");
+        exit;
     } else {
-        echo json_encode(['success' => false, 'message' => 'Error al guardar estudiante: ' . $stmt->error]);
+        // Guardar mensaje de error en la sesión
+        $_SESSION['error_message'] = "Error al guardar el estudiante: " . $stmt->error;
+        header("Location: estudiantes.php");
+        exit;
     }
     
-    // Cerrar statement
+    // Cerrar la sentencia
     $stmt->close();
-    
 } else {
-    echo json_encode(['success' => false, 'message' => 'Método no permitido']);
+    // Si no es una solicitud POST, redirigir a la página principal
+    header("Location: estudiantes.php");
+    exit;
 }
 
-// Cerrar conexión
+// Cerrar la conexión
 $conn->close();
 ?>
