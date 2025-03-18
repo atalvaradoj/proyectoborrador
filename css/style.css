@@ -1,0 +1,135 @@
+
+body{
+
+    background: rgb(255,255,255);
+    background: radial-gradient(circle, rgba(255,255,255,1) 0%, rgba(0,86,179,1) 100%);
+    display: flex;
+    
+    align-items: center;
+    height: 100vh;
+    flex-direction: column;
+    margin-top: 50px !important; /* Agregar un margen superior para separar visualmente el contenido */
+}
+
+*{
+    font-family: 'Arial', sans-serif;
+    box-sizing: border-box;
+}
+
+form{
+    
+    width: 600px;
+    border: 2px solid #ffffff;
+    padding: 3rem;
+    background-color: white;
+    border: none;
+    border-radius: 20px;
+    -webkit-border-radius: 20px;
+    -moz-border-radius: 20px;
+    -ms-border-radius: 20px;
+    -o-border-radius: 20px;
+    color: aliceblue;
+    margin-top: 20px;
+}
+
+h1{
+    display: block;
+    text-align: center;
+    border: 2px solid none;
+    width: 95%;
+    padding: 10px;
+    margin: 10px auto;
+    border-radius: 10px;
+    -webkit-border-radius: 10px;
+    -moz-border-radius: 10px;
+    -ms-border-radius: 10px;
+    -o-border-radius: 10px;
+    color: black;
+}
+
+label{
+
+    color: black;
+    font: size 18px; 
+    padding: 10px;
+    font-weight: 300px;
+}
+
+.logo {
+    width: 150px;
+    height: 150px;
+    display: block;
+    margin: 10px auto ; 
+}
+
+input{
+    display: block;
+    border: 2px solid none;
+    width: 95%;
+    padding: 10px;
+    margin: 10px;
+    border-radius: 10px;
+}
+
+button{
+    float: right;
+    background-color: #0056b3;
+    margin-top: 10px;
+    padding: .5rem;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    margin-right: 10px;
+    text-decoration: none;
+
+}
+
+button:hover{
+    background-color: #003366;
+}
+
+a{
+    float: left;
+    
+    margin-top: 10px;
+    margin-left: 10px;
+    padding: .5rem;
+    text-decoration: none;
+    color: #0056b3;
+}
+
+a:hover{
+    color: #003366;
+}
+
+
+/* Estilo para la sección de recordar contraseña */
+.remember-password {
+    text-align: center !important;
+    padding: 3rem;
+    margin-top: 20px;
+}
+
+.remember-password a {
+    color: #0056b3;
+    text-decoration: none;
+    font-size: 14px;
+}
+
+.remember-password a:hover {
+    color: #003366;
+}
+
+p{
+    color: black;
+    font-size: 10px;
+    text-align: center;
+    padding: 10px;
+    font-weight: 300px;
+}
+
+.remember-password p {
+    margin-top: 10px; /* Agregar un poco de espacio entre el enlace y el párrafo */
+    color: #333; /* Puedes agregar un color de texto al párrafo */
+    font-size: 12px; /* Tamaño del texto del párrafo */
+}
