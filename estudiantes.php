@@ -209,12 +209,11 @@ $result = $conn->query($sql);
                                                 <i class="fas fa-eye"></i>
                                             </button>
                                             <button class="btn btn-sm btn-warning edit-student"
-                                                data-id="<?php echo htmlspecialchars($student['ID_estudiante']); ?>"
+                                                data-id="<?php echo htmlspecialchars($row['ID_estudiante']); ?>"
                                                 data-bs-toggle="modal"
                                                 data-bs-target="#editStudentModal">
                                                 <i class="fas fa-edit"></i>
                                             </button>
-
                                             <!-- Botón que abre el modal de confirmación para eliminar -->
                                             <button class="btn btn-sm btn-danger delete-student"
                                                 data-id="<?php echo htmlspecialchars($row['ID_estudiante']); ?>"
@@ -621,91 +620,105 @@ $result = $conn->query($sql);
 
     <!-- Scripts de Bootstrap y JavaScript personalizado -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            // Configurar el modal de eliminación
-            const deleteButtons = document.querySelectorAll('.delete-student');
-            deleteButtons.forEach(button => {
-                button.addEventListener('click', function() {
-                    const studentId = this.getAttribute('data-id');
-                    const studentName = this.getAttribute('data-name');
+                    // Configurar el modal de eliminación
+                    const deleteButtons = document.querySelectorAll('.delete-student');
+                    deleteButtons.forEach(button => {
+                        button.addEventListener('click', function() {
+                            const studentId = this.getAttribute('data-id');
+                            const studentName = this.getAttribute('data-name');
 
-                    // Actualizar el modal con la información del estudiante
-                    document.getElementById('deleteStudentId').value = studentId;
-                    document.getElementById('deleteStudentName').textContent = studentName;
-                });
-            });
+                            // Actualizar el modal con la información del estudiante
+                            document.getElementById('deleteStudentId').value = studentId;
+                            document.getElementById('deleteStudentName').textContent = studentName;
+                        });
+                    });
 
-            // Manejar el botón de confirmación de eliminación
-            document.getElementById('confirmDeleteBtn').addEventListener('click', function() {
-                // Mostrar indicador de carga
-                this.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Eliminando...';
-                this.disabled = true;
+                    // Manejar el botón de confirmación de eliminación
+                    document.getElementById('confirmDeleteBtn').addEventListener('click', function() {
+                        // Mostrar indicador de carga
+                        this.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Eliminando...';
+                        this.disabled = true;
 
-                // Enviar el formulario
-                document.getElementById('deleteStudentForm').submit();
-            });
+                        // Enviar el formulario
+                        document.getElementById('deleteStudentForm').submit();
+                    });
 
-            // Manejar el botón de guardar estudiante
-            document.getElementById('saveStudentBtn').addEventListener('click', function() {
-                // Mostrar indicador de carga
-                this.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Guardando...';
-                this.disabled = true;
+                    // Manejar el botón de guardar estudiante
+                    document.getElementById('saveStudentBtn').addEventListener('click', function() {
+                        // Mostrar indicador de carga
+                        this.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Guardando...';
+                        this.disabled = true;
 
-                // Enviar el formulario
-                document.getElementById('addStudentForm').submit();
-            });
+                        // Enviar el formulario
+                        document.getElementById('addStudentForm').submit();
+                    });
 
-            // Previsualización de la foto
-            const photoInput = document.getElementById('studentPhoto');
-            const photoPreview = document.getElementById('photoPreview');
+                    // Previsualización de la foto
+                    const photoInput = document.getElementById('studentPhoto');
+                    const photoPreview = document.getElementById('photoPreview');
 
-            if (photoInput && photoPreview) {
-                photoInput.addEventListener('change', function() {
-                    if (this.files && this.files[0]) {
-                        const reader = new FileReader();
+                    if (photoInput && photoPreview) {
+                        photoInput.addEventListener('change', function() {
+                            if (this.files && this.files[0]) {
+                                const reader = new FileReader();
 
-                        reader.onload = function(e) {
-                            photoPreview.innerHTML = `<img src="${e.target.result}" class="img-fluid preview-img" alt="Vista previa">`;
-                            photoPreview.classList.add('has-image');
-                        }
+                                reader.onload = function(e) {
+                                    photoPreview.innerHTML = `<img src="${e.target.result}" class="img-fluid preview-img" alt="Vista previa">`;
+                                    photoPreview.classList.add('has-image');
+                                }
 
-                        reader.readAsDataURL(this.files[0]);
-                    } else {
-                        photoPreview.innerHTML = `
+                                reader.readAsDataURL(this.files[0]);
+                            } else {
+                                photoPreview.innerHTML = `
                             <div class="photo-preview-text">
                                 <i class="fas fa-camera fa-2x mb-2"></i><br>
                                 Haga clic para seleccionar una foto
                             </div>
                         `;
-                        photoPreview.classList.remove('has-image');
+                                photoPreview.classList.remove('has-image');
+                            }
+                        });
+
+                        photoPreview.addEventListener('click', function() {
+                            photoInput.click();
+                        });
                     }
-                });
 
-                photoPreview.addEventListener('click', function() {
-                    photoInput.click();
-                });
-            }
+                    // Búsqueda con tecla Enter
+                    document.getElementById('searchInput').addEventListener('keypress', function(e) {
+                        if (e.key === 'Enter') {
+                            e.preventDefault();
+                            document.getElementById('searchForm').submit();
+                        }
+                    });
 
-            // Búsqueda con tecla Enter
-            document.getElementById('searchInput').addEventListener('keypress', function(e) {
-                if (e.key === 'Enter') {
-                    e.preventDefault();
-                    document.getElementById('searchForm').submit();
-                }
-            });
+                    // Limpiar búsqueda al hacer clic en el campo si hay texto
+                    document.getElementById('searchInput').addEventListener('click', function() {
+                        if (this.value) {
+                            const clearSearch = confirm('¿Desea limpiar el campo de búsqueda?');
+                            if (clearSearch) {
+                                this.value = '';
+                            }
+                        }
+                    });
 
-            // Limpiar búsqueda al hacer clic en el campo si hay texto
-            document.getElementById('searchInput').addEventListener('click', function() {
-                if (this.value) {
-                    const clearSearch = confirm('¿Desea limpiar el campo de búsqueda?');
-                    if (clearSearch) {
-                        this.value = '';
-                    }
-                }
-            });
-        });
+                    // Evento para cargar datos del estudiante en el modal de edición
+                    $('.edit-student').on('click', function() {
+                                var studentId = $(this).data('id');
+                                $('#editStudentForm').trigger('reset');
+                                $('#editStudentLoader').show();
+                                $('#editStudentForm').hide();
+
+                                // Deshabilitar el botón de guardar mientras se cargan los datos
+                                $('#updateStudentBtn').prop('disabled', true);
+
+                                $.ajax({
+                                            url: 'controllers/get_student.php',
+                                            type: 'POST',
     </script>
 
     <style>
