@@ -32,7 +32,7 @@ $result = $conn->query($sql);
 
 <body>
     <div class="container mt-4 mb-5">
-        <?php 
+        <?php
         // Mostrar mensajes de éxito o error
         if (isset($_SESSION['success_message'])) {
             echo '<div class="alert alert-success alert-dismissible fade show" role="alert">
@@ -41,7 +41,7 @@ $result = $conn->query($sql);
                   </div>';
             unset($_SESSION['success_message']);
         }
-        
+
         if (isset($_SESSION['error_message'])) {
             echo '<div class="alert alert-danger alert-dismissible fade show" role="alert">
                     <i class="fas fa-exclamation-circle me-2"></i>' . $_SESSION['error_message'] . '
@@ -163,7 +163,7 @@ $result = $conn->query($sql);
                                             <button class="btn btn-sm btn-warning" data-bs-toggle="modal" data-bs-target="#editStudentModal">
                                                 <i class="fas fa-edit"></i>
                                             </button>
-                                            
+
                                             <!-- OPCIÓN 1: Botón que abre el modal de confirmación -->
                                             <button class="btn btn-sm btn-danger delete-student"
                                                 data-id="<?php echo htmlspecialchars($row['ID_estudiante']); ?>"
@@ -172,7 +172,7 @@ $result = $conn->query($sql);
                                                 data-bs-target="#deleteStudentModal">
                                                 <i class="fas fa-trash"></i>
                                             </button>
-                                            
+
                                             <!-- OPCIÓN 2: Enlace directo para eliminar (alternativa) -->
                                             <!--
                                             <a href="delete_student_direct.php?id=<?php echo htmlspecialchars($row['ID_estudiante']); ?>" 
@@ -198,8 +198,160 @@ $result = $conn->query($sql);
 
     <!-- Modal para Agregar Estudiante -->
     <div class="modal fade" id="addStudentModal" tabindex="-1" aria-labelledby="addStudentModalLabel" aria-hidden="true">
-        <!-- Contenido del modal de agregar (sin cambios) -->
-        <!-- ... -->
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header bg-success text-white">
+                    <h5 class="modal-title" id="addStudentModalLabel">
+                        <i class="fas fa-user-plus me-2"></i> Agregar Nuevo Estudiante
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="addStudentForm" method="post" action="save_student.php" enctype="multipart/form-data">
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="mb-3">
+                                    <label class="form-label">Foto del Estudiante</label>
+                                    <div class="photo-preview" id="photoPreview">
+                                        <div class="photo-preview-text">
+                                            <i class="fas fa-camera fa-2x mb-2"></i><br>
+                                            Haga clic para seleccionar una foto
+                                        </div>
+                                    </div>
+                                    <input type="file" class="form-control" id="studentPhoto" name="studentPhoto" accept="image/*">
+                                </div>
+                            </div>
+                            <div class="col-md-8">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="mb-3">
+                                            <label for="studentId" class="form-label">ID Estudiante</label>
+                                            <input type="text" class="form-control" id="studentId" name="studentId" placeholder="Ej: 20230006" required>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="mb-3">
+                                            <label for="documentType" class="form-label">Tipo de Documento</label>
+                                            <select class="form-select" id="documentType" name="documentType" required>
+                                                <option value="">Seleccione...</option>
+                                                <option value="CC">Cédula de Ciudadanía</option>
+                                                <option value="TI">Tarjeta de Identidad</option>
+                                                <option value="CE">Cédula de Extranjería</option>
+                                                <option value="PP">Pasaporte</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="mb-3">
+                                            <label for="birthDate" class="form-label">Fecha de Nacimiento</label>
+                                            <input type="date" class="form-control" id="birthDate" name="birthDate" required>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="firstName" class="form-label">Nombres</label>
+                                    <input type="text" class="form-control" id="firstName" name="firstName" placeholder="Ej: Juan Carlos" required>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="lastName" class="form-label">Apellidos</label>
+                                    <input type="text" class="form-control" id="lastName" name="lastName" placeholder="Ej: Pérez Gómez" required>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="gender" class="form-label">Género</label>
+                                    <select class="form-select" id="gender" name="gender" required>
+                                        <option value="">Seleccione...</option>
+                                        <option value="M">Masculino</option>
+                                        <option value="F">Femenino</option>
+                                        <option value="O">Otro</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="email" class="form-label">Correo Electrónico</label>
+                                    <input type="email" class="form-control" id="email" name="email" placeholder="Ej: juan.perez@ejemplo.com" required>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="address" class="form-label">Dirección</label>
+                                    <input type="text" class="form-control" id="address" name="address" placeholder="Ej: Calle 123 # 45-67" required>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="city" class="form-label">Ciudad</label>
+                                    <input type="text" class="form-control" id="city" name="city" placeholder="Ej: Bogotá" required>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="program" class="form-label">Programa Académico</label>
+                                    <select class="form-select" id="program" name="program" required>
+                                        <option value="">Seleccione...</option>
+                                        <option value="ing_sistemas">Ingeniería de Sistemas</option>
+                                        <option value="ing_industrial">Ingeniería Industrial</option>
+                                        <option value="administracion">Administración de Empresas</option>
+                                        <option value="contaduria">Contaduría Pública</option>
+                                        <option value="derecho">Derecho</option>
+                                        <option value="medicina">Medicina</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="admissionDate" class="form-label">Fecha de Ingreso</label>
+                                    <input type="date" class="form-control" id="admissionDate" name="admissionDate" required>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="mb-3">
+                                    <label for="status" class="form-label">Estado</label>
+                                    <select class="form-select" id="status" name="status" required>
+                                        <option value="active">Activo</option>
+                                        <option value="inactive">Inactivo</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="observations" class="form-label">Observaciones</label>
+                            <textarea class="form-control" id="observations" name="observations" rows="3" placeholder="Ingrese cualquier observación relevante sobre el estudiante..."></textarea>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-success" id="saveStudentBtn">
+                        <i class="fas fa-save me-1"></i> Guardar Estudiante
+                    </button>
+                </div>
+            </div>
+        </div>
     </div>
 
     <!-- Modal para Ver Estudiante -->
@@ -237,7 +389,7 @@ $result = $conn->query($sql);
 
     <!-- Scripts de Bootstrap y JavaScript personalizado -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-    
+
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             // Configurar el modal de eliminación
@@ -258,11 +410,12 @@ $result = $conn->query($sql);
                 // Mostrar indicador de carga
                 this.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Eliminando...';
                 this.disabled = true;
-                
+
                 // Enviar el formulario
                 document.getElementById('deleteStudentForm').submit();
             });
         });
     </script>
 </body>
+
 </html>
