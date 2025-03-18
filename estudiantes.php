@@ -214,7 +214,7 @@ $result = $conn->query($sql);
                                                 data-bs-target="#editStudentModal">
                                                 <i class="fas fa-edit"></i>
                                             </button>
-                                            
+
                                             <!-- Botón que abre el modal de confirmación para eliminar -->
                                             <button class="btn btn-sm btn-danger delete-student"
                                                 data-id="<?php echo htmlspecialchars($row['ID_estudiante']); ?>"
@@ -794,3 +794,5 @@ $result = $conn->query($sql);
 </body>
 
 </html>
+
+<?php include "shared/footer.php" ?>
