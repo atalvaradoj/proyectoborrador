@@ -7,9 +7,6 @@ ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 
-// Incluir archivo de configuración
-require_once "includes/db_config.php";
-
 // Verificar si se recibió una solicitud POST
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Verificar si se recibió el ID del estudiante
@@ -22,15 +19,24 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Obtener ID del estudiante a eliminar
     $id_estudiante = $_POST['studentId'];
     
-    // Obtener conexión a la base de datos
-    $conn = getConnection();
+    // Establecer conexión directamente
+    $servername = "localhost";
+    $username = "root";  // Cambia esto por tu usuario de MySQL
+    $password = "";      // Cambia esto por tu contraseña de MySQL
+    $dbname = "sistema_academico";  // Cambia esto por el nombre de tu base de datos
     
-    // Verificar si la conexión fue exitosa
-    if (!$conn) {
-        $_SESSION['error_message'] = "Error de conexión a la base de datos.";
+    // Crear conexión
+    $conn = new mysqli($servername, $username, $password, $dbname);
+    
+    // Verificar conexión
+    if ($conn->connect_error) {
+        $_SESSION['error_message'] = "Error de conexión: " . $conn->connect_error;
         header("Location: estudiantes.php");
         exit;
     }
+    
+    // Establecer charset
+    $conn->set_charset("utf8");
 
     try {
         // Obtener información de la foto antes de eliminar
@@ -111,5 +117,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     exit;
 }
 ?>
+
 
 
