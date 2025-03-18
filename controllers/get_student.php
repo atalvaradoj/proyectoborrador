@@ -15,6 +15,34 @@ error_reporting(E_ALL);
 // Incluir archivo de configuración de la base de datos
 require_once "../includes/db_config.php";
 
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    $input = json_decode(file_get_contents('php://input'), true);
+    $studentId = $input['studentId'];
+
+    $conn = getConnection();
+    if ($conn) {
+        $sql = "SELECT * FROM estudiantes WHERE ID_estudiante = ?";
+        $stmt = $conn->prepare($sql);
+        $stmt->bind_param("s", $studentId);
+        $stmt->execute();
+        $result = $stmt->get_result();
+
+        if ($result->num_rows > 0) {
+            $student = $result->fetch_assoc();
+            echo json_encode(['success' => true, 'student' => $student]);
+        } else {
+            echo json_encode(['success' => false, 'message' => 'Estudiante no encontrado.']);
+        }
+
+        $stmt->close();
+        $conn->close();
+    } else {
+        echo json_encode(['success' => false, 'message' => 'Error de conexión a la base de datos.']);
+    }
+} else {
+    echo json_encode(['success' => false, 'message' => 'Método no permitido.']);
+}
+
 // Verificar si se recibió un ID de estudiante
 if (!isset($_GET['id']) || empty($_GET['id'])) {
     echo json_encode(['success' => false, 'message' => 'ID de estudiante no proporcionado']);

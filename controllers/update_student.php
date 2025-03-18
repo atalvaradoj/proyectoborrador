@@ -20,19 +20,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
 
     // Obtener datos del formulario
-    $id_estudiante = $_POST['studentId'];
-    $nombres = $_POST['firstName'];
-    $apellidos = $_POST['lastName'];
-    $tipo_documento = $_POST['documentType'];
-    $fecha_nacimiento = $_POST['birthDate'];
-    $genero = $_POST['gender'];
+    $studentId = $_POST['studentId'];
+    $firstName = $_POST['firstName'];
+    $lastName = $_POST['lastName'];
     $email = $_POST['email'];
-    $direccion = $_POST['address'];
-    $ciudad = $_POST['city'];
-    $grado = $_POST['program'];
-    $fecha_ingreso = $_POST['admissionDate'];
-    $estado = $_POST['status'];
-    $observaciones = $_POST['observations'];
+    $program = $_POST['program'];
+    $observations = $_POST['observations'];
     $foto_actual = $_POST['currentPhoto'];
     
     // Obtener conexión a la base de datos
@@ -60,7 +53,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             
             // Generar nombre único para la foto
             $file_extension = pathinfo($_FILES['studentPhoto']['name'], PATHINFO_EXTENSION);
-            $new_filename = 'student_' . $id_estudiante . '_' . time() . '.' . $file_extension;
+            $new_filename = 'student_' . $studentId . '_' . time() . '.' . $file_extension;
             $target_file = $upload_dir . $new_filename;
             
             // Mover archivo subido al directorio de destino
@@ -81,16 +74,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $sql = "UPDATE estudiantes SET 
                 Nombres = ?, 
                 Apellidos = ?, 
-                Tipo_documento = ?, 
-                Fecha_nacimiento = ?, 
-                Genero = ?, 
-                Email = ?, 
-                Direccion = ?, 
-                Ciudad = ?, 
+                Correo = ?, 
                 Grado = ?, 
-                Fecha_ingreso = ?, 
-                Estado = ?, 
-                Observaciones = ?, 
+                Comentarios = ?, 
                 Foto = ? 
                 WHERE ID_estudiante = ?";
                 
@@ -101,21 +87,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         }
         
         // Vincular parámetros
-        $stmt->bind_param("ssssssssssssss", 
-            $nombres, 
-            $apellidos, 
-            $tipo_documento, 
-            $fecha_nacimiento, 
-            $genero, 
+        $stmt->bind_param("sssssss", 
+            $firstName, 
+            $lastName, 
             $email, 
-            $direccion, 
-            $ciudad, 
-            $grado, 
-            $fecha_ingreso, 
-            $estado, 
-            $observaciones, 
+            $program, 
+            $observations, 
             $foto_path, 
-            $id_estudiante
+            $studentId
         );
         
         // Ejecutar consulta
@@ -152,3 +131,4 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     header("Location: ../estudiantes.php");
     exit;
 }
+?>
