@@ -7,56 +7,63 @@ session_start();
 require_once "../includes/db_config.php";
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $id_estudiante = $_POST['studentId'];
+    $studentId = $_POST['studentId'];
 
-    if (empty($id_estudiante)) {
+    if (empty($studentId)) {
         $_SESSION['error_message'] = "ID del estudiante no proporcionado.";
-        header("Location: ../estudiantes.php");
+        header("Location: ../Registro.php#estudiantes");
         exit;
     }
 
     $conn = getConnection();
     if ($conn) {
-        // Eliminar la foto del estudiante si no es la predeterminada
-        $sql = "SELECT Foto FROM estudiantes WHERE ID_estudiante = ?";
-        $stmt = $conn->prepare($sql);
-        $stmt->bind_param("s", $id_estudiante);
-        $stmt->execute();
-        $result = $stmt->get_result();
+        try {
+            // Obtener la foto actual del estudiante
+            $sql = "SELECT Foto FROM estudiantes WHERE ID_estudiante = ?";
+            $stmt = $conn->prepare($sql);
+            $stmt->bind_param("s", $studentId);
+            $stmt->execute();
+            $result = $stmt->get_result();
 
-        if ($result->num_rows > 0) {
-            $row = $result->fetch_assoc();
-            $foto_path = "../" . $row['Foto'];
+            if ($result->num_rows > 0) {
+                $row = $result->fetch_assoc();
+                $foto_actual = "../" . $row['Foto'];
 
-            if (file_exists($foto_path) && strpos($foto_path, 'sombrero-de-graduacion.png') === false) {
-                unlink($foto_path);
+                // Eliminar la foto actual si existe
+                if (!empty($foto_actual) && file_exists($foto_actual)) {
+                    unlink($foto_actual);
+                }
             }
+
+            $stmt->close();
+
+            // Eliminar el estudiante de la base de datos
+            $sql = "DELETE FROM estudiantes WHERE ID_estudiante = ?";
+            $stmt = $conn->prepare($sql);
+            $stmt->bind_param("s", $studentId);
+
+            if ($stmt->execute()) {
+                $_SESSION['success_message'] = "Estudiante eliminado correctamente.";
+            } else {
+                throw new Exception("Error al eliminar el estudiante: " . $stmt->error);
+            }
+
+            $stmt->close();
+        } catch (Exception $e) {
+            $_SESSION['error_message'] = "Error: " . $e->getMessage();
+        } finally {
+            $conn->close();
         }
-
-        $stmt->close();
-
-        // Eliminar el estudiante de la base de datos
-        $sql = "DELETE FROM estudiantes WHERE ID_estudiante = ?";
-        $stmt = $conn->prepare($sql);
-        $stmt->bind_param("s", $id_estudiante);
-
-        if ($stmt->execute()) {
-            $_SESSION['success_message'] = "Estudiante eliminado correctamente.";
-        } else {
-            $_SESSION['error_message'] = "Error al eliminar el estudiante: " . $stmt->error;
-        }
-
-        $stmt->close();
-        $conn->close();
     } else {
         $_SESSION['error_message'] = "Error de conexión a la base de datos.";
     }
 
-    header("Location: ../estudiantes.php");
+    // Redirigir de vuelta a Registro.php con la pestaña activa
+    header("Location: ../Registro.php#estudiantes");
     exit;
 } else {
     $_SESSION['error_message'] = "Método no permitido.";
-    header("Location: ../estudiantes.php");
+    header("Location: ../Registro.php#estudiantes");
     exit;
 }
 ?>

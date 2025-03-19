@@ -41,7 +41,7 @@
         <h4 class="text-center">Sistema Académico</h4>
         <ul class="nav flex-column">
             <li class="nav-item">
-                <a class="nav-link active" href="#comunicacion">NA</a>
+                <a class="nav-link" href="shared/base_admin.php">Administracion</a>
             </li>
             <li class="nav-item">
                 <a class="nav-link" href="registro.php">Registro</a>
@@ -63,9 +63,6 @@
             </li>
             <li class="nav-item">
                 <a class="nav-link" href="docentes.php">Docentes</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="estudiantes.php">Estudiantes</a>
             </li>
         </ul>
     </div>
