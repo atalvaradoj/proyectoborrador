@@ -1,4 +1,4 @@
-<?php include "shared/header.php" ?>
+<?php include "shared/header.php"; ?>
 
 <!DOCTYPE html>
 <html lang="es">
@@ -6,15 +6,29 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Formularios - La Galleta Estudiosa</title>
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <title>Administración Escolar</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        .form-container {
-            display: none;
+        .tab-content {
+            margin-top: 20px;
         }
 
-        .active {
-            display: block;
+        .table-container {
+            margin-top: 20px;
+        }
+
+        .btn-add {
+            margin-bottom: 20px;
+        }
+
+        .modal-header {
+            background-color: #007bff;
+            color: white;
+        }
+
+        .modal-footer .btn-secondary {
+            background-color: #6c757d;
         }
     </style>
 </head>
@@ -23,323 +37,447 @@
     <div class="container mt-5">
         <h1 class="text-center mb-4">Sistema de Administración Escolar</h1>
 
-        <?php if (isset($_GET['success'])): ?>
-            <div class="alert alert-success">Datos registrados correctamente (simulación)</div>
-        <?php endif; ?>
+        <?php
+        if (isset($_SESSION['success_message'])) {
+            echo '<div class="alert alert-success alert-dismissible fade show" role="alert">
+                    <i class="fas fa-check-circle me-2"></i>' . $_SESSION['success_message'] . '
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                  </div>';
+            unset($_SESSION['success_message']);
+        }
 
-        <?php if (isset($_GET['error'])): ?>
-            <div class="alert alert-danger">Error en el procesamiento del formulario (simulación)</div>
-        <?php endif; ?>
+        if (isset($_SESSION['error_message'])) {
+            echo '<div class="alert alert-danger alert-dismissible fade show" role="alert">
+                    <i class="fas fa-exclamation-circle me-2"></i>' . $_SESSION['error_message'] . '
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                  </div>';
+            unset($_SESSION['error_message']);
+        }
+        ?>
 
-        <div class="card">
-            <div class="card-header">
-                <ul class="nav nav-tabs card-header-tabs">
-                    <li class="nav-item">
-                        <a class="nav-link active" id="estudiante-tab" href="#estudiante">Registrar Estudiante</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" id="docente-tab" href="#docente">Registrar Docente</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" id="grupo-tab" href="#grupo">Registrar Grupo</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" id="nota-tab" href="#nota">Registrar Nota</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" id="asistencia-tab" href="#asistencia">Registrar Asistencia</a>
-                    </li>
-                </ul>
-            </div>
-            <div class="card-body">
-                <!-- Formulario de Estudiante -->
-                <div id="estudiante-form" class="form-container active">
-                    <h3>Registro de Estudiante</h3>
-                    <form method="post" action="?success=1">
-                        <input type="hidden" name="tipo_formulario" value="estudiante">
+        <!-- Pestañas de navegación -->
+        <ul class="nav nav-tabs" id="adminTabs" role="tablist">
+            <li class="nav-item">
+                <a class="nav-link active" id="usuarios-tab" data-bs-toggle="tab" href="#usuarios" role="tab">Usuarios</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" id="docentes-tab" data-bs-toggle="tab" href="#docentes" role="tab">Docentes</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" id="estudiantes-tab" data-bs-toggle="tab" href="#estudiantes" role="tab">Estudiantes</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" id="grupos-tab" data-bs-toggle="tab" href="#grupos" role="tab">Grupos</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" id="notas-tab" data-bs-toggle="tab" href="#notas" role="tab">Notas</a>
+            </li>
+        </ul>
 
-                        <div class="form-group">
-                            <label for="nombre">Nombre:</label>
-                            <input type="text" class="form-control" id="nombre" name="nombre" required>
-                        </div>
-
-                        <div class="form-group">
-                            <label for="apellido">Apellido:</label>
-                            <input type="text" class="form-control" id="apellido" name="apellido" required>
-                        </div>
-
-                        <div class="form-group">
-                            <label for="fecha_nacimiento">Fecha de Nacimiento:</label>
-                            <input type="date" class="form-control" id="fecha_nacimiento" name="fecha_nacimiento"
-                                required>
-                        </div>
-
-                        <div class="form-group">
-                            <label for="grupo_id">Grupo:</label>
-                            <select class="form-control" id="grupo_id" name="grupo_id" required>
-                                <option value="">Seleccione un grupo</option>
-                                <option value="1">1A - Primer Grado (2023)</option>
-                                <option value="2">1B - Primer Grado (2023)</option>
-                                <option value="3">2A - Segundo Grado (2023)</option>
-                                <option value="4">2B - Segundo Grado (2023)</option>
-                                <option value="5">3A - Tercer Grado (2023)</option>
-                            </select>
-                        </div>
-
-                        <button type="submit" class="btn btn-primary">Registrar Estudiante</button>
-                    </form>
-                </div>
-
-                <!-- Formulario de Docente -->
-                <div id="docente-form" class="form-container">
-                    <h3>Registro de Docente</h3>
-                    <form method="post" action="?success=1">
-                        <input type="hidden" name="tipo_formulario" value="docente">
-
-                        <div class="form-group">
-                            <label for="nombre_docente">Nombre:</label>
-                            <input type="text" class="form-control" id="nombre_docente" name="nombre" required>
-                        </div>
-
-                        <div class="form-group">
-                            <label for="apellido_docente">Apellido:</label>
-                            <input type="text" class="form-control" id="apellido_docente" name="apellido" required>
-                        </div>
-
-                        <div class="form-group">
-                            <label for="especialidad">Especialidad:</label>
-                            <input type="text" class="form-control" id="especialidad" name="especialidad" required>
-                        </div>
-
-                        <div class="form-group">
-                            <label for="email_docente">Email:</label>
-                            <input type="email" class="form-control" id="email_docente" name="email" required>
-                        </div>
-
-                        <button type="submit" class="btn btn-primary">Registrar Docente</button>
-                    </form>
-                </div>
-
-                <!-- Formulario de Grupo -->
-                <div id="grupo-form" class="form-container">
-                    <h3>Registro de Grupo</h3>
-                    <form method="post" action="?success=1">
-                        <input type="hidden" name="tipo_formulario" value="grupo">
-
-                        <div class="form-group">
-                            <label for="nombre_grupo">Nombre del Grupo:</label>
-                            <input type="text" class="form-control" id="nombre_grupo" name="nombre" required>
-                        </div>
-
-                        <div class="form-group">
-                            <label for="grado">Grado:</label>
-                            <select class="form-control" id="grado" name="grado" required>
-                                <option value="">Seleccione un grado</option>
-                                <option value="1">Primer Grado</option>
-                                <option value="2">Segundo Grado</option>
-                                <option value="3">Tercer Grado</option>
-                                <option value="4">Cuarto Grado</option>
-                                <option value="5">Quinto Grado</option>
-                                <option value="6">Sexto Grado</option>
-                            </select>
-                        </div>
-
-                        <div class="form-group">
-                            <label for="docente_id">Docente:</label>
-                            <select class="form-control" id="docente_id" name="docente_id" required>
-                                <option value="">Seleccione un docente</option>
-                                <option value="1">Martínez, Ana</option>
-                                <option value="2">López, Carlos</option>
-                                <option value="3">Rodríguez, María</option>
-                                <option value="4">González, Juan</option>
-                                <option value="5">Pérez, Laura</option>
-                            </select>
-                        </div>
-
-                        <div class="form-group">
-                            <label for="anio_lectivo">Año Lectivo:</label>
-                            <select class="form-control" id="anio_lectivo" name="anio_lectivo" required>
-                                <option value="">Seleccione un año</option>
-                                <option value="2023">2023</option>
-                                <option value="2022">2022</option>
-                                <option value="2021">2021</option>
-                                <option value="2020">2020</option>
-                                <option value="2019">2019</option>
-                            </select>
-                        </div>
-
-                        <button type="submit" class="btn btn-primary">Registrar Grupo</button>
-                    </form>
-                </div>
-
-                <!-- Formulario de Nota -->
-                <div id="nota-form" class="form-container">
-                    <h3>Registro de Nota</h3>
-                    <form method="post" action="?success=1">
-                        <input type="hidden" name="tipo_formulario" value="nota">
-
-                        <div class="form-group">
-                            <label for="estudiante_id">Estudiante:</label>
-                            <select class="form-control" id="estudiante_id" name="estudiante_id" required>
-                                <option value="">Seleccione un estudiante</option>
-                                <option value="1">Gómez, Pedro (1A)</option>
-                                <option value="2">Fernández, Lucía (1A)</option>
-                                <option value="3">Díaz, Martín (2B)</option>
-                                <option value="4">Torres, Sofía (3A)</option>
-                                <option value="5">Ramírez, Diego (2A)</option>
-                            </select>
-                        </div>
-
-                        <div class="form-group">
-                            <label for="materia">Materia:</label>
-                            <select class="form-control" id="materia" name="materia" required>
-                                <option value="">Seleccione una materia</option>
-                                <option value="Matemáticas">Matemáticas</option>
-                                <option value="Español">Español</option>
-                                <option value="Ciencias Naturales">Ciencias Naturales</option>
-                                <option value="Ciencias Sociales">Ciencias Sociales</option>
-                                <option value="Inglés">Inglés</option>
-                            </select>
-                        </div>
-
-                        <div class="form-group">
-                            <label for="calificacion">Calificación:</label>
-                            <input type="number" class="form-control" id="calificacion" name="calificacion" min="0"
-                                max="10" step="0.1" required>
-                        </div>
-
-                        <div class="form-group">
-                            <label for="fecha_nota">Fecha:</label>
-                            <input type="date" class="form-control" id="fecha_nota" name="fecha" required>
-                        </div>
-
-                        <button type="submit" class="btn btn-primary">Registrar Nota</button>
-                    </form>
-                </div>
-
-                <!-- Formulario de Asistencia -->
-                <div id="asistencia-form" class="form-container">
-                    <h3>Registro de Asistencia</h3>
-                    <form method="post" action="?success=1">
-                        <input type="hidden" name="tipo_formulario" value="asistencia">
-
-                        <div class="form-group">
-                            <label for="grupo_asistencia">Grupo:</label>
-                            <select class="form-control" id="grupo_asistencia" name="grupo_id" required>
-                                <option value="">Seleccione un grupo</option>
-                                <option value="1">1A - Primer Grado (2023)</option>
-                                <option value="2">1B - Primer Grado (2023)</option>
-                                <option value="3">2A - Segundo Grado (2023)</option>
-                                <option value="4">2B - Segundo Grado (2023)</option>
-                                <option value="5">3A - Tercer Grado (2023)</option>
-                            </select>
-                        </div>
-
-                        <div class="form-group">
-                            <label for="fecha_asistencia">Fecha:</label>
-                            <input type="date" class="form-control" id="fecha_asistencia" name="fecha" required>
-                        </div>
-
-                        <div class="form-group">
-                            <label>Lista de Estudiantes:</label>
-                            <table class="table table-bordered">
-                                <thead>
-                                    <tr>
-                                        <th>Estudiante</th>
-                                        <th>Estado</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <td>Gómez, Pedro</td>
-                                        <td>
-                                            <select class="form-control" name="estado[1]">
-                                                <option value="Presente">Presente</option>
-                                                <option value="Ausente">Ausente</option>
-                                                <option value="Tardanza">Tardanza</option>
-                                            </select>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>Fernández, Lucía</td>
-                                        <td>
-                                            <select class="form-control" name="estado[2]">
-                                                <option value="Presente">Presente</option>
-                                                <option value="Ausente">Ausente</option>
-                                                <option value="Tardanza">Tardanza</option>
-                                            </select>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>Ramírez, Diego</td>
-                                        <td>
-                                            <select class="form-control" name="estado[3]">
-                                                <option value="Presente">Presente</option>
-                                                <option value="Ausente">Ausente</option>
-                                                <option value="Tardanza">Tardanza</option>
-                                            </select>
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-
-                        <button type="submit" class="btn btn-primary">Registrar Asistencia</button>
-                    </form>
+        <!-- Contenido de las pestañas -->
+        <div class="tab-content">
+            <!-- Administración de Usuarios -->
+            <div class="tab-pane fade show active" id="usuarios" role="tabpanel">
+                <h3>Administración de Usuarios</h3>
+                <button class="btn btn-primary btn-add" data-bs-toggle="modal" data-bs-target="#addUserModal">
+                    <i class="fas fa-user-plus me-2"></i>Agregar Usuario
+                </button>
+                <div class="table-container">
+                    <table class="table table-striped table-hover">
+                        <thead class="table-primary">
+                            <tr>
+                                <th>ID</th>
+                                <th>Nombre</th>
+                                <th>Correo</th>
+                                <th>Rol</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- Aquí irían los datos dinámicos -->
+                            <tr>
+                                <td>1</td>
+                                <td>Juan Pérez</td>
+                                <td>juan.perez@example.com</td>
+                                <td>Administrador</td>
+                                <td>
+                                    <button class="btn btn-warning btn-sm">
+                                        <i class="fas fa-edit"></i> Editar
+                                    </button>
+                                    <button class="btn btn-danger btn-sm">
+                                        <i class="fas fa-trash"></i> Eliminar
+                                    </button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
                 </div>
             </div>
-        </div>
 
-        <div class="text-center mt-4">
-            <a href="index.php" class="btn btn-secondary">Volver al Inicio</a>
+            <!-- Administración de Docentes -->
+            <div class="tab-pane fade" id="docentes" role="tabpanel">
+                <h3>Administración de Docentes</h3>
+                <button class="btn btn-primary btn-add" data-bs-toggle="modal" data-bs-target="#addDocenteModal">
+                    <i class="fas fa-chalkboard-teacher me-2"></i>Agregar Docente
+                </button>
+                <div class="table-container">
+                    <table class="table table-striped table-hover">
+                        <thead class="table-primary">
+                            <tr>
+                                <th>ID</th>
+                                <th>Nombre</th>
+                                <th>Correo</th>
+                                <th>Especialidad</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- Aquí irían los datos dinámicos -->
+                            <tr>
+                                <td>1</td>
+                                <td>María López</td>
+                                <td>maria.lopez@example.com</td>
+                                <td>Matemáticas</td>
+                                <td>
+                                    <button class="btn btn-warning btn-sm">
+                                        <i class="fas fa-edit"></i> Editar
+                                    </button>
+                                    <button class="btn btn-danger btn-sm">
+                                        <i class="fas fa-trash"></i> Eliminar
+                                    </button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Administración de Estudiantes -->
+            <div class="tab-pane fade" id="estudiantes" role="tabpanel">
+                <h3>Administración de Estudiantes</h3>
+                <button class="btn btn-primary btn-add" data-bs-toggle="modal" data-bs-target="#addEstudianteModal">
+                    <i class="fas fa-user-graduate me-2"></i>Agregar Estudiante
+                </button>
+                <div class="table-container">
+                    <table class="table table-striped table-hover">
+                        <thead class="table-primary">
+                            <tr>
+                                <th>ID</th>
+                                <th>Nombre</th>
+                                <th>Correo</th>
+                                <th>Grado</th>
+                                <th>Foto</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php
+                            // Conexión a la base de datos
+                            include "includes/db_config.php";
+                            $conn = getConnection();
+
+                            // Consulta para obtener los estudiantes
+                            $sql = "SELECT * FROM estudiantes ORDER BY ID_estudiante DESC";
+                            $result = $conn->query($sql);
+
+                            if ($result && $result->num_rows > 0):
+                                while ($row = $result->fetch_assoc()):
+                                    $photo_url = !empty($row['Foto']) && file_exists($row['Foto']) ? $row['Foto'] : 'img/sombrero-de-graduacion.png';
+                            ?>
+                                <tr>
+                                    <td><?php echo htmlspecialchars($row['ID_estudiante']); ?></td>
+                                    <td><?php echo htmlspecialchars($row['Nombres'] . ' ' . $row['Apellidos']); ?></td>
+                                    <td><?php echo htmlspecialchars($row['Correo']); ?></td>
+                                    <td><?php echo htmlspecialchars($row['Grado']); ?></td>
+                                    <td><img src="<?php echo htmlspecialchars($photo_url); ?>" alt="Foto" width="50" class="rounded-circle"></td>
+                                    <td>
+                                        <button class="btn btn-warning btn-sm edit-student" 
+                                            data-id="<?php echo htmlspecialchars($row['ID_estudiante']); ?>"
+                                            data-firstname="<?php echo htmlspecialchars($row['Nombres']); ?>"
+                                            data-lastname="<?php echo htmlspecialchars($row['Apellidos']); ?>"
+                                            data-email="<?php echo htmlspecialchars($row['Correo']); ?>"
+                                            data-program="<?php echo htmlspecialchars($row['Grado']); ?>"
+                                            data-bs-toggle="modal" 
+                                            data-bs-target="#editEstudianteModal">
+                                            <i class="fas fa-edit"></i> Editar
+                                        </button>
+                                        <button class="btn btn-danger btn-sm delete-student" 
+                                            data-id="<?php echo htmlspecialchars($row['ID_estudiante']); ?>"
+                                            data-bs-toggle="modal" 
+                                            data-bs-target="#deleteEstudianteModal">
+                                            <i class="fas fa-trash"></i> Eliminar
+                                        </button>
+                                    </td>
+                                </tr>
+                            <?php
+                                endwhile;
+                            else:
+                            ?>
+                                <tr>
+                                    <td colspan="6" class="text-center">No hay estudiantes registrados.</td>
+                                </tr>
+                            <?php endif; ?>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Modal para Agregar Estudiante -->
+            <div class="modal fade" id="addEstudianteModal" tabindex="-1" aria-labelledby="addEstudianteModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-lg">
+                    <div class="modal-content">
+                        <div class="modal-header bg-success text-white">
+                            <h5 class="modal-title" id="addEstudianteModalLabel">
+                                <i class="fas fa-user-plus me-2"></i> Agregar Nuevo Estudiante
+                            </h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <form id="addEstudianteForm" method="post" action="controllers/save_student.php" enctype="multipart/form-data">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="mb-3">
+                                            <label for="studentId" class="form-label">ID Estudiante</label>
+                                            <input type="text" class="form-control" id="studentId" name="ID_estudiante" required>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="mb-3">
+                                            <label for="studentPhoto" class="form-label">Foto</label>
+                                            <input type="file" class="form-control" id="studentPhoto" name="Foto" accept="image/*">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="mb-3">
+                                            <label for="Nombres" class="form-label">Nombres</label>
+                                            <input type="text" class="form-control" id="Nombres" name="Nombres" required>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="mb-3">
+                                            <label for="Apellidos" class="form-label">Apellidos</label>
+                                            <input type="text" class="form-control" id="Apellidos" name="Apellidos" required>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="mb-3">
+                                            <label for="Correo" class="form-label">Correo Electrónico</label>
+                                            <input type="email" class="form-control" id="Correo" name="Correo" required>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="mb-3">
+                                            <label for="Grado" class="form-label">Grado</label>
+                                            <select class="form-select" id="Grado" name="Grado" required>
+                                                <option value="Primer_grado">Primero</option>
+                                                <option value="Segundo_grado">Segundo</option>
+                                                <option value="Tercer_grado">Tercero</option>
+                                                <option value="Cuarto_grado">Cuarto</option>
+                                                <option value="Quinto_grado">Quinto</option>
+                                                <option value="Sexto_grado">Sexto</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="Comentarios" class="form-label">Comentarios</label>
+                                    <textarea class="form-control" id="Comentarios" name="Comentarios" rows="3"></textarea>
+                                </div>
+                            </form>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                            <button type="submit" class="btn btn-success" form="addEstudianteForm">
+                                <i class="fas fa-save me-1"></i> Guardar Estudiante
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Modal para Editar Estudiante -->
+            <div class="modal fade" id="editEstudianteModal" tabindex="-1" aria-labelledby="editEstudianteModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-lg">
+                    <div class="modal-content">
+                        <div class="modal-header bg-warning text-white">
+                            <h5 class="modal-title" id="editEstudianteModalLabel">
+                                <i class="fas fa-edit me-2"></i> Editar Estudiante
+                            </h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <form id="editEstudianteForm" method="post" action="controllers/update_student.php" enctype="multipart/form-data">
+                                <input type="hidden" id="editStudentId" name="studentId">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="mb-3">
+                                            <label for="editFirstName" class="form-label">Nombres</label>
+                                            <input type="text" class="form-control" id="editFirstName" name="firstName" required>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="mb-3">
+                                            <label for="editLastName" class="form-label">Apellidos</label>
+                                            <input type="text" class="form-control" id="editLastName" name="lastName" required>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="mb-3">
+                                            <label for="editEmail" class="form-label">Correo Electrónico</label>
+                                            <input type="email" class="form-control" id="editEmail" name="email" required>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="mb-3">
+                                            <label for="editProgram" class="form-label">Grado</label>
+                                            <select class="form-select" id="editProgram" name="program" required>
+                                                <option value="Primer_grado">Primero</option>
+                                                <option value="Segundo_grado">Segundo</option>
+                                                <option value="Tercer_grado">Tercero</option>
+                                                <option value="Cuarto_grado">Cuarto</option>
+                                                <option value="Quinto_grado">Quinto</option>
+                                                <option value="Sexto_grado">Sexto</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="editObservations" class="form-label">Comentarios</label>
+                                    <textarea class="form-control" id="editObservations" name="observations" rows="3"></textarea>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="editPhoto" class="form-label">Actualizar Foto</label>
+                                    <input type="file" class="form-control" id="editPhoto" name="Foto" accept="image/*">
+                                </div>
+                            </form>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                            <button type="submit" class="btn btn-warning" form="editEstudianteForm">
+                                <i class="fas fa-save me-1"></i> Guardar Cambios
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Modal para Eliminar Estudiante -->
+            <div class="modal fade" id="deleteEstudianteModal" tabindex="-1" aria-labelledby="deleteEstudianteModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header bg-danger text-white">
+                            <h5 class="modal-title" id="deleteEstudianteModalLabel">
+                                <i class="fas fa-trash me-2"></i> Eliminar Estudiante
+                            </h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <p>¿Está seguro de que desea eliminar este estudiante?</p>
+                            <form id="deleteEstudianteForm" method="post" action="controllers/delete_student.php">
+                                <input type="hidden" id="deleteStudentId" name="studentId">
+                            </form>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                            <button type="submit" class="btn btn-danger" form="deleteEstudianteForm">
+                                <i class="fas fa-trash me-1"></i> Eliminar
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Administración de Grupos -->
+            <div class="tab-pane fade" id="grupos" role="tabpanel">
+                <h3>Administración de Grupos</h3>
+                <button class="btn btn-primary btn-add" data-bs-toggle="modal" data-bs-target="#addGrupoModal">
+                    <i class="fas fa-users-cog me-2"></i>Agregar Grupo
+                </button>
+                <div class="table-container">
+                    <p>Tabla de grupos pendiente de implementar.</p>
+                </div>
+            </div>
+
+            <!-- Administración de Notas -->
+            <div class="tab-pane fade" id="notas" role="tabpanel">
+                <h3>Administración de Notas</h3>
+                <button class="btn btn-primary btn-add" data-bs-toggle="modal" data-bs-target="#addNotaModal">
+                    <i class="fas fa-book me-2"></i>Agregar Nota
+                </button>
+                <div class="table-container">
+                    <p>Tabla de notas pendiente de implementar.</p>
+                </div>
+            </div>
         </div>
     </div>
 
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script>
-        $(document).ready(function () {
-            // Cambiar entre formularios
-            $('#estudiante-tab').click(function (e) {
-                e.preventDefault();
-                $('.nav-link').removeClass('active');
-                $(this).addClass('active');
-                $('.form-container').removeClass('active');
-                $('#estudiante-form').addClass('active');
-            });
+        document.addEventListener('DOMContentLoaded', function () {
+            const deleteButtons = document.querySelectorAll('.delete-student');
+            const deleteStudentIdInput = document.getElementById('deleteStudentId');
 
-            $('#docente-tab').click(function (e) {
-                e.preventDefault();
-                $('.nav-link').removeClass('active');
-                $(this).addClass('active');
-                $('.form-container').removeClass('active');
-                $('#docente-form').addClass('active');
+            deleteButtons.forEach(button => {
+                button.addEventListener('click', function () {
+                    const studentId = this.getAttribute('data-id');
+                    deleteStudentIdInput.value = studentId;
+                });
             });
+        });
+    </script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const editButtons = document.querySelectorAll('.edit-student');
+            const editStudentIdInput = document.getElementById('editStudentId');
+            const editFirstNameInput = document.getElementById('editFirstName');
+            const editLastNameInput = document.getElementById('editLastName');
+            const editEmailInput = document.getElementById('editEmail');
+            const editProgramSelect = document.getElementById('editProgram');
+            const editObservationsTextarea = document.getElementById('editObservations');
 
-            $('#grupo-tab').click(function (e) {
-                e.preventDefault();
-                $('.nav-link').removeClass('active');
-                $(this).addClass('active');
-                $('.form-container').removeClass('active');
-                $('#grupo-form').addClass('active');
-            });
+            editButtons.forEach(button => {
+                button.addEventListener('click', function () {
+                    const studentId = this.getAttribute('data-id');
+                    const firstName = this.getAttribute('data-firstname');
+                    const lastName = this.getAttribute('data-lastname');
+                    const email = this.getAttribute('data-email');
+                    const program = this.getAttribute('data-program');
+                    const observations = this.getAttribute('data-observations');
 
-            $('#nota-tab').click(function (e) {
-                e.preventDefault();
-                $('.nav-link').removeClass('active');
-                $(this).addClass('active');
-                $('.form-container').removeClass('active');
-                $('#nota-form').addClass('active');
+                    // Cargar los datos en el formulario
+                    editStudentIdInput.value = studentId;
+                    editFirstNameInput.value = firstName;
+                    editLastNameInput.value = lastName;
+                    editEmailInput.value = email;
+                    editProgramSelect.value = program;
+                    editObservationsTextarea.value = observations;
+                });
             });
+        });
+    </script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const hash = window.location.hash; // Obtener el hash de la URL
+            const defaultTab = document.querySelector('a[href="#usuarios"]'); // Pestaña predeterminada (Usuarios)
 
-            $('#asistencia-tab').click(function (e) {
-                e.preventDefault();
-                $('.nav-link').removeClass('active');
-                $(this).addClass('active');
-                $('.form-container').removeClass('active');
-                $('#asistencia-form').addClass('active');
-            });
+            if (hash) {
+                const tab = document.querySelector(`a[href="${hash}"]`);
+                if (tab) {
+                    const tabInstance = new bootstrap.Tab(tab);
+                    tabInstance.show(); // Mostrar la pestaña correspondiente al hash
+                }
+            } else {
+                // Si no hay hash, activa la pestaña predeterminada
+                const defaultTabInstance = new bootstrap.Tab(defaultTab);
+                defaultTabInstance.show();
+            }
         });
     </script>
 </body>
@@ -347,4 +485,4 @@
 </html>
 
 <!-- Footer -->
-<?php include "shared/footer.php" ?>
+<?php include "shared/footer.php"; ?>

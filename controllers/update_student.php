@@ -27,6 +27,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $program = $_POST['program'];
     $observations = $_POST['observations'];
     $foto_actual = $_POST['currentPhoto'];
+    $foto_path = $foto_actual;
     
     // Obtener conexión a la base de datos
     $conn = getConnection();
@@ -40,10 +41,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     try {
         // Procesar la foto si se ha subido una nueva
-        $foto_path = $foto_actual;
-        
-        if (isset($_FILES['studentPhoto']) && $_FILES['studentPhoto']['error'] === UPLOAD_ERR_OK) {
-            // Directorio para guardar las fotos
+        if (isset($_FILES['Foto']) && $_FILES['Foto']['error'] === UPLOAD_ERR_OK) {
             $upload_dir = "../uploads/estudiantes/";
             
             // Crear directorio si no existe
@@ -52,14 +50,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             }
             
             // Generar nombre único para la foto
-            $file_extension = pathinfo($_FILES['studentPhoto']['name'], PATHINFO_EXTENSION);
+            $file_extension = pathinfo($_FILES['Foto']['name'], PATHINFO_EXTENSION);
             $new_filename = 'student_' . $studentId . '_' . time() . '.' . $file_extension;
             $target_file = $upload_dir . $new_filename;
             
             // Mover archivo subido al directorio de destino
-            if (move_uploaded_file($_FILES['studentPhoto']['tmp_name'], $target_file)) {
+            if (move_uploaded_file($_FILES['Foto']['tmp_name'], $target_file)) {
                 // Eliminar foto anterior si existe y no es la predeterminada
-                if (!empty($foto_actual) && file_exists("../" . $foto_actual) && strpos($foto_actual, 'sombrero-de-graduacion.png') === false) {
+                if (!empty($foto_actual) && file_exists("../" . $foto_actual)) {
                     unlink("../" . $foto_actual);
                 }
                 
@@ -77,7 +75,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 Correo = ?, 
                 Grado = ?, 
                 Comentarios = ?, 
-                Foto = ? 
+                Foto = IF(? != '', ?, Foto) 
                 WHERE ID_estudiante = ?";
                 
         $stmt = $conn->prepare($sql);
@@ -87,12 +85,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         }
         
         // Vincular parámetros
-        $stmt->bind_param("sssssss", 
+        $stmt->bind_param("ssssssss", 
             $firstName, 
             $lastName, 
             $email, 
             $program, 
             $observations, 
+            $foto_path, 
             $foto_path, 
             $studentId
         );
@@ -122,13 +121,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
     
     // Redirigir de vuelta a la página de estudiantes
-    header("Location: ../estudiantes.php");
+    header("Location: ../Registro.php#estudiantes");
     exit;
     
 } else {
     // Si no es una solicitud POST, redirigir a la página principal
     $_SESSION['error_message'] = "Método no permitido.";
-    header("Location: ../estudiantes.php");
+    header("Location: ../Registro.php#estudiantes");
     exit;
 }
 ?>
