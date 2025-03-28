@@ -3,7 +3,6 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sistema Académico</title>
     <!-- Agregar Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
@@ -16,17 +15,19 @@
             position: fixed;
             top: 0;
             left: 0;
-            background-color: #f8f9fa;
+            background-color: #e7f3ff; /* Fondo celeste para toda la barra lateral */
             padding: 20px;
             box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
         }
         .sidebar .nav-link {
             color: #333;
             margin-bottom: 10px;
+            padding: 10px; /* Espaciado interno */
+            text-align: center; /* Centrar texto */
+            border-radius: 5px; /* Bordes redondeados opcionales */
         }
         .sidebar .nav-link:hover {
-            background-color: #e9ecef;
-            border-radius: 5px;
+            background-color: #d0e7ff; /* Fondo más oscuro al pasar el mouse */
         }
         .content {
             margin-left: 270px; /* Espacio para la barra lateral */
@@ -65,12 +66,6 @@
                 <a class="nav-link" href="docentes.php">Docentes</a>
             </li>
         </ul>
-    </div>
-
-    <!-- Contenido principal -->
-    <div class="content">
-        <h1>Bienvenido al Sistema Académico</h1>
-        <p>Este es el contenido principal de la página.</p>
     </div>
 
     <!-- Agregar Bootstrap JS y dependencias -->
