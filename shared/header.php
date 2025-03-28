@@ -56,9 +56,6 @@
                 <a class="nav-link" href="testimonios.php">Testimonios</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="formulario.php">Formulario</a>
-            </li>
-            <li class="nav-item">
                 <a class="nav-link" href="servicios.php">Servicios</a>
             </li>
             <li class="nav-item">
