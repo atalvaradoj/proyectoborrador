@@ -2,6 +2,13 @@
 
 <style>
     /* Estilos con colores que coinciden con la página de testimonios */
+    .main-container {
+        max-width: 1000px;
+        margin: 0 auto;
+        padding-top: 50px;
+        padding-bottom: 50px;
+    }
+
     .container h1,
     .container h2 {
         color: #007bff;
@@ -43,6 +50,7 @@
         border-radius: 5px;
         padding: 20px;
         box-shadow: 0 3px 6px rgba(0, 123, 255, 0.1);
+        border: 1px solid #007bff;
     }
 
     .map-container {
@@ -50,9 +58,17 @@
         border-radius: 5px;
         overflow: hidden;
     }
+
+    /* Responsividad */
+    @media (max-width: 768px) {
+        .main-container {
+            padding-left: 15px;
+            padding-right: 15px;
+        }
+    }
 </style>
 
-<main class="container mt-5">
+<div class="main-container">
     <!-- Sección de Contacto -->
     <section id="contacto" class="my-5">
         <h1 class="mb-4 text-center">Contáctenos</h1>
@@ -119,6 +135,6 @@
             </div>
         </div>
     </section>
-</main>
+</div>
 
 <?php include "shared/footer.php" ?>
