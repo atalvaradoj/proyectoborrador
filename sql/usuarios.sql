@@ -29,6 +29,6 @@ ALTER TABLE usuarios ADD COLUMN telefono VARCHAR(20) NULL AFTER Correo;
 ALTER TABLE usuarios ADD COLUMN Rol ENUM('docentes', 'padres', 'admin') DEFAULT 'padres';
 
 
-select * from usuarios;
+select `ID_usuario` from usuarios;
 
 ALTER TABLE usuarios DROP COLUMN Rol;
