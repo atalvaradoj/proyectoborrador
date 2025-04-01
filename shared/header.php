@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema Académico</title>
     <!-- Agregar Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
@@ -15,19 +16,17 @@
             position: fixed;
             top: 0;
             left: 0;
-            background-color: #e7f3ff; /* Fondo celeste para toda la barra lateral */
+            background-color: #f8f9fa;
             padding: 20px;
             box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
         }
         .sidebar .nav-link {
             color: #333;
             margin-bottom: 10px;
-            padding: 10px; /* Espaciado interno */
-            text-align: center; /* Centrar texto */
-            border-radius: 5px; /* Bordes redondeados opcionales */
         }
         .sidebar .nav-link:hover {
-            background-color: #d0e7ff; /* Fondo más oscuro al pasar el mouse */
+            background-color: #e9ecef;
+            border-radius: 5px;
         }
         .content {
             margin-left: 270px; /* Espacio para la barra lateral */
@@ -41,6 +40,9 @@
     <div class="sidebar">
         <h4 class="text-center">Sistema Académico</h4>
         <ul class="nav flex-column">
+            <li class="nav-item">
+                <a class="nav-link" href="shared/base_admin.php">Administracion</a>
+            </li>
             <li class="nav-item">
                 <a class="nav-link" href="registro.php">Registro</a>
             </li>

@@ -1,15 +1,34 @@
-<?php include "shared/header.php" ?>
+<?php include "shared/header.php"; ?>
+
+<!DOCTYPE html>
+<html lang="es">
 
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Administración Escolar</title>
     <link href="https://kit.fontawesome.com/97cef9f55a.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
+        /* Fuente global */
         body {
             font-family: 'Arial', sans-serif;
             margin-top: 20px;
         }
 
+        /* Centramos el contenido vertical y horizontalmente */
+        main {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
         .container {
             margin-top: 30px;
+            /* Opcional: limitar el ancho máximo */
+            max-width: 1200px;
         }
 
         .row {
@@ -18,7 +37,8 @@
 
         .section {
             margin-bottom: 30px;
-            border: 2px solid #0056b3;
+            border: 2px solid #007bff;
+            /* Color actualizado */
             border-radius: 10px;
             padding: 0;
             overflow: hidden;
@@ -40,9 +60,11 @@
             margin: 0;
             padding: 15px 10px;
             text-align: center;
-            background-color: #0056b3;
+            background-color: #007bff;
+            /* Color actualizado */
             color: white;
-            border-bottom: 2px solid #0056b3;
+            border-bottom: 2px solid #007bff;
+            /* Color actualizado */
         }
 
         .section-content {
@@ -54,7 +76,8 @@
 
         .fa-icon {
             font-size: 2.5rem;
-            color: #0056b3;
+            color: #007bff;
+            /* Color actualizado */
             margin: 15px auto;
             text-align: center;
             display: block;
@@ -75,7 +98,8 @@
         }
 
         ul li strong {
-            color: #0056b3;
+            color: #007bff;
+            /* Color actualizado */
             display: block;
             margin-bottom: 8px;
             font-size: 1.2rem;
@@ -86,19 +110,22 @@
             width: 80%;
             margin: 10px auto;
             padding: 10px 15px;
-            background-color: #0056b3;
+            background-color: #007bff;
+            /* Color actualizado */
             color: white;
             text-decoration: none;
             border-radius: 5px;
             font-weight: 500;
             text-align: center;
             transition: all 0.3s ease;
-            border: 2px solid #0056b3;
+            border: 2px solid #007bff;
+            /* Color actualizado */
         }
 
         .btn-ir-ahora:hover {
             background-color: white;
-            color: #0056b3;
+            color: #007bff;
+            /* Color actualizado */
             text-decoration: none;
         }
 
@@ -117,7 +144,7 @@
             .section-title {
                 font-size: 1.5rem;
             }
-            
+
             .btn-ir-ahora {
                 width: 100%;
             }
@@ -138,7 +165,8 @@
                             <ul>
                                 <li>
                                     <strong>Formulario de Contáctenos</strong>
-                                    Si tienes alguna duda, puedes enviarnos un correo directamente a la Escuela y te ayudaremos con tu consulta.
+                                    Si tienes alguna duda, puedes enviarnos un correo directamente a la Escuela y te
+                                    ayudaremos con tu consulta.
                                 </li>
                             </ul>
                             <a href="apicontactenos.php" class="btn-ir-ahora">Ir ahora</a>
@@ -146,7 +174,7 @@
                     </div>
                 </div>
 
-                <!-- Sección de Administración Financiera -->
+                <!-- Sección de Pago de Matrícula -->
                 <div class="col-md-6 col-lg-4 mb-4">
                     <div class="section">
                         <h2 class="section-title">Pago de Matrícula</h2>
@@ -184,7 +212,7 @@
     </main>
 
     <!-- Footer -->
-    <?php include "shared/footer.php" ?>
+    <?php include "shared/footer.php"; ?>
 
     <!-- Bootstrap JS y dependencias -->
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
