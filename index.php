@@ -22,7 +22,8 @@
         <input type="password" name="Contraseña" placeholder="Contraseña del usuario">
 
         <button type="sumit">Iniciar Sesion</button>
-        <a href="crearusuario.php">Crear usuario</a>
+        <a href="solicitud_usuario.php">Crear cuenta</a>
+        
     </form>
 
     <!-- Agregar el enlace para recordar contraseña -->
@@ -32,4 +33,8 @@
     </div>
 
 </body>
+
+<footer>
+    <p>&copy; 2025 Sistema Académico. Todos los derechos reservados.</p>
+</footer>
 </html>
