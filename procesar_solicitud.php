@@ -1,20 +1,9 @@
 <?php
 require 'vendor/autoload.php'; // Cargar PHPMailer
+require 'shared/db_connection.php'; // Incluir la conexión a la base de datos
+
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
-
-// Conectar a la base de datos
-$servername = "localhost";
-$username = "root";  // Cambia esto si tienes otro usuario
-$password = "";      // Cambia esto si tienes contraseña en MySQL
-$dbname = "sistema_academico"; // Cambia al nombre de tu BD
-
-$conn = new mysqli($servername, $username, $password, $dbname);
-
-// Verificar conexión
-if ($conn->connect_error) {
-    die("Error de conexión: " . $conn->connect_error);
-}
 
 // Validar datos del formulario
 if (empty($_POST["nombre"]) || empty($_POST["correo"]) || empty($_POST["telefono"])) {
@@ -35,8 +24,6 @@ $stmt = $conn->prepare($sql);
 $stmt->bind_param("ssss", $nombre, $correo, $telefono, $contrasena_hash);
 
 if ($stmt->execute()) {
-    echo "Registro exitoso. Se enviará un correo con la contraseña.";
-
     // Enviar correo con la contraseña generada
     $mail = new PHPMailer(true);
     try {
@@ -56,10 +43,13 @@ if ($stmt->execute()) {
         $mail->Body = "Hola $nombre,\n\nTu cuenta ha sido creada con éxito. Aquí está tu contraseña:\n\n$contrasena\n\nPor favor, cámbiala después de iniciar sesión.";
 
         $mail->send();
-        echo "Correo enviado correctamente.";
     } catch (Exception $e) {
         echo "Error al enviar el correo: {$mail->ErrorInfo}";
     }
+
+    // Redirigir al index.php después de procesar la solicitud
+    header("Location: index.php");
+    exit(); // Asegura que no se ejecute más código después de la redirección
 } else {
     echo "Error al registrar usuario: " . $stmt->error;
 }
