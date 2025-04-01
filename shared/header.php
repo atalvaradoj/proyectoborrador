@@ -61,12 +61,6 @@
         </ul>
     </div>
 
-    <!-- Contenido principal -->
-    <div class="content">
-        <h1>Bienvenido al Sistema Académico</h1>
-        <p>Este es el contenido principal de la página.</p>
-    </div>
-
     <!-- Agregar Bootstrap JS y dependencias -->
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js"></script>
