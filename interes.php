@@ -9,7 +9,7 @@
 
         <div class="container">
             <div class="header">
-                <h1>¿Por qué elegir una escuela?</h1>
+                <h1>¿Por qué elegirnos?</h1>
             </div>
 
             <div class="content">
