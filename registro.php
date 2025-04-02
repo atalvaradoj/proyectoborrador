@@ -271,6 +271,109 @@
                 </div>
             </div>
 
+            <!-- Modal para Eliminar Docente -->
+            <div class="modal fade" id="deleteDocenteModal" tabindex="-1" aria-labelledby="deleteDocenteModalLabel"
+                aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header bg-danger text-white">
+                            <h5 class="modal-title" id="deleteDocenteModalLabel">
+                                <i class="fas fa-trash me-2"></i> Eliminar Docente
+                            </h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <p>¿Está seguro de que desea eliminar este docente?</p>
+                            <form id="deleteDocenteForm" method="post" action="controllers/delete_teacher.php">
+                                <input type="hidden" id="deleteTeacherId" name="ID_docente">
+                            </form>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                            <button type="submit" class="btn btn-danger" form="deleteDocenteForm">
+                                <i class="fas fa-trash me-1"></i> Eliminar
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Modal para Editar Docente -->
+            <div class="modal fade" id="editDocenteModal" tabindex="-1" aria-labelledby="editDocenteModalLabel"
+                aria-hidden="true">
+                <div class="modal-dialog modal-lg">
+                    <div class="modal-content">
+                        <div class="modal-header bg-warning text-white">
+                            <h5 class="modal-title" id="editDocenteModalLabel">
+                                <i class="fas fa-edit me-2"></i> Editar Docente
+                            </h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <form id="editDocenteForm" method="post" action="controllers/update_teacher.php">
+                                <input type="hidden" id="editTeacherId" name="ID_docente">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="mb-3">
+                                            <label for="editTeacherFirstName" class="form-label">Nombres</label>
+                                            <input type="text" class="form-control" id="editTeacherFirstName"
+                                                name="Nombres" required>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="mb-3">
+                                            <label for="editTeacherLastName" class="form-label">Apellidos</label>
+                                            <input type="text" class="form-control" id="editTeacherLastName"
+                                                name="Apellidos" required>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="mb-3">
+                                            <label for="editTeacherEmail" class="form-label">Correo Electrónico</label>
+                                            <input type="email" class="form-control" id="editTeacherEmail" name="Correo"
+                                                required>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="mb-3">
+                                            <label for="editTeacherSpecialty" class="form-label">Especialidad</label>
+                                            <select class="form-select" id="editTeacherSpecialty" name="Especialidad"
+                                                required>
+                                                <option value="Español">Español</option>
+                                                <option value="Matemáticas">Matemáticas</option>
+                                                <option value="Ciencias">Ciencias</option>
+                                                <option value="Estudios Sociales">Estudios Sociales</option>
+                                                <option value="Artes Industriales">Artes Industriales</option>
+                                                <option value="Inglés">Inglés</option>
+                                                <option value="Cómputo">Cómputo</option>
+                                                <option value="Otra">Otra</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="mb-3" id="editOtherSpecialtyContainer" style="display: none;">
+                                    <label for="editTeacherOtherSpecialty" class="form-label">Otra Especialidad</label>
+                                    <input type="text" class="form-control" id="editTeacherOtherSpecialty"
+                                        name="Otra_especialidad">
+                                </div>
+                                <div class="mb-3">
+                                    <label for="editTeacherComments" class="form-label">Comentarios</label>
+                                    <textarea class="form-control" id="editTeacherComments" name="Comentarios"
+                                        rows="3"></textarea>
+                                </div>
+                            </form>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                            <button type="submit" class="btn btn-warning" form="editDocenteForm">
+                                <i class="fas fa-save me-1"></i> Guardar Cambios
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
             <!-- Administración de Estudiantes -->
             <div class="tab-pane fade" id="estudiantes" role="tabpanel">
@@ -499,6 +602,7 @@
             <!-- Modal para Eliminar Estudiante -->
             <div class="modal fade" id="deleteEstudianteModal" tabindex="-1"
                 aria-labelledby="deleteEstudianteModalLabel" aria-hidden="true">
+
                 <div class="modal-dialog">
                     <div class="modal-content">
                         <div class="modal-header bg-danger text-white">
@@ -564,6 +668,128 @@
 
                     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 
+                    <!-- // Script para editar estudinate -->
+                    <script>
+                        document.addEventListener('DOMContentLoaded', function () {
+                            const editButtons = document.querySelectorAll('.edit-student');
+                            const editStudentIdInput = document.getElementById('editStudentId');
+                            const editFirstNameInput = document.getElementById('editFirstName');
+                            const editLastNameInput = document.getElementById('editLastName');
+                            const editEmailInput = document.getElementById('editEmail');
+                            const editProgramSelect = document.getElementById('editProgram');
+                            const editObservationsTextarea = document.getElementById('editObservations');
+
+                            editButtons.forEach(button => {
+                                button.addEventListener('click', function () {
+                                    const studentId = this.getAttribute('data-id');
+                                    const firstName = this.getAttribute('data-firstname');
+                                    const lastName = this.getAttribute('data-lastname');
+                                    const email = this.getAttribute('data-email');
+                                    const program = this.getAttribute('data-program');
+                                    const observations = this.getAttribute('data-observations');
+
+                                    // Cargar los datos en el formulario
+                                    editStudentIdInput.value = studentId;
+                                    editFirstNameInput.value = firstName;
+                                    editLastNameInput.value = lastName;
+                                    editEmailInput.value = email;
+                                    editProgramSelect.value = program;
+                                    editObservationsTextarea.value = observations;
+                                });
+                            });
+                        });
+                    </script>
+
+
+
+                    <!-- //Script para eliminar estudiante -->
+                    <script>
+                        document.addEventListener('DOMContentLoaded', function () {
+                            const deleteButtons = document.querySelectorAll('.delete-student');
+                            const deleteStudentIdInput = document.getElementById('deleteStudentId');
+
+                            deleteButtons.forEach(button => {
+                                button.addEventListener('click', function () {
+                                    const studentId = this.getAttribute('data-id');
+                                    deleteStudentIdInput.value = studentId;
+                                });
+                            });
+                        });
+                    </script>
+
+                    <script>
+                        document.addEventListener('DOMContentLoaded', function () {
+                            const hash = window.location.hash; // Obtener el hash de la URL
+                            const defaultTab = document.querySelector('a[href="#usuarios"]'); // Pestaña predeterminada (Usuarios)
+
+                            if (hash) {
+                                const tab = document.querySelector(`a[href="${hash}"]`);
+                                if (tab) {
+                                    const tabInstance = new bootstrap.Tab(tab);
+                                    tabInstance.show(); // Mostrar la pestaña correspondiente al hash
+                                }
+                            } else {
+                                // Si no hay hash, activa la pestaña predeterminada
+                                const defaultTabInstance = new bootstrap.Tab(defaultTab);
+                                defaultTabInstance.show();
+                            }
+                        });
+                    </script>
+
+                    <!-- // Script para manejar los modales eliminar y editar docente  -->
+                    <script>
+                        document.addEventListener('DOMContentLoaded', function () {
+                            // Manejar el modal de edición
+                            const editButtons = document.querySelectorAll('.edit-teacher');
+                            const editTeacherIdInput = document.getElementById('editTeacherId');
+                            const editTeacherFirstNameInput = document.getElementById('editTeacherFirstName');
+                            const editTeacherLastNameInput = document.getElementById('editTeacherLastName');
+                            const editTeacherEmailInput = document.getElementById('editTeacherEmail');
+                            const editTeacherSpecialtySelect = document.getElementById('editTeacherSpecialty');
+                            const editTeacherOtherSpecialtyInput = document.getElementById('editTeacherOtherSpecialty');
+                            const editTeacherCommentsTextarea = document.getElementById('editTeacherComments');
+
+                            editButtons.forEach(button => {
+                                button.addEventListener('click', function () {
+                                    const teacherId = this.getAttribute('data-id');
+                                    const firstName = this.getAttribute('data-firstname');
+                                    const lastName = this.getAttribute('data-lastname');
+                                    const email = this.getAttribute('data-email');
+                                    const specialty = this.getAttribute('data-specialty');
+                                    const otherSpecialty = this.getAttribute('data-other-specialty');
+                                    const comments = this.getAttribute('data-comments');
+
+                                    // Cargar los datos en el formulario
+                                    editTeacherIdInput.value = teacherId;
+                                    editTeacherFirstNameInput.value = firstName;
+                                    editTeacherLastNameInput.value = lastName;
+                                    editTeacherEmailInput.value = email;
+                                    editTeacherSpecialtySelect.value = specialty;
+                                    editTeacherOtherSpecialtyInput.value = otherSpecialty;
+                                    editTeacherCommentsTextarea.value = comments;
+
+                                    // Mostrar u ocultar el campo "Otra Especialidad"
+                                    const editOtherSpecialtyContainer = document.getElementById('editOtherSpecialtyContainer');
+                                    if (specialty === 'Otra') {
+                                        editOtherSpecialtyContainer.style.display = 'block';
+                                    } else {
+                                        editOtherSpecialtyContainer.style.display = 'none';
+                                    }
+                                });
+                            });
+
+                            // Manejar el modal de eliminación
+                            const deleteButtons = document.querySelectorAll('.delete-teacher');
+                            const deleteTeacherIdInput = document.getElementById('deleteTeacherId');
+
+                            deleteButtons.forEach(button => {
+                                button.addEventListener('click', function () {
+                                    const teacherId = this.getAttribute('data-id');
+                                    deleteTeacherIdInput.value = teacherId;
+                                });
+                            });
+                        });
+                    </script>
 </body>
 <!-- Footer -->
 <?php include "shared/footer.php"; ?>
