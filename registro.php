@@ -645,151 +645,153 @@
                     <i class="fas fa-book me-2"></i>Agregar Nota
                 </button>
                 <div class="table-container">
+                </div>
+            </div>
 
-                    <!-- Scripts para el CRUD de Docentes -->
-                    <script>
-                        document.addEventListener('DOMContentLoaded', function () {
-                            const specialtySelect = document.getElementById('teacherSpecialty');
-                            const otherSpecialtyContainer = document.getElementById('otherSpecialtyContainer');
-                            const otherSpecialtyInput = document.getElementById('teacherOtherSpecialty');
+            <!-- Scripts para el CRUD de Docentes -->
+            <script>
+                document.addEventListener('DOMContentLoaded', function () {
+                    const specialtySelect = document.getElementById('teacherSpecialty');
+                    const otherSpecialtyContainer = document.getElementById('otherSpecialtyContainer');
+                    const otherSpecialtyInput = document.getElementById('teacherOtherSpecialty');
 
-                            specialtySelect.addEventListener('change', function () {
-                                if (this.value === 'Otra') {
-                                    otherSpecialtyContainer.style.display = 'block';
-                                    otherSpecialtyInput.required = true;
-                                } else {
-                                    otherSpecialtyContainer.style.display = 'none';
-                                    otherSpecialtyInput.required = false;
-                                    otherSpecialtyInput.value = ''; // Limpiar el campo
-                                }
-                            });
+                    specialtySelect.addEventListener('change', function () {
+                        if (this.value === 'Otra') {
+                            otherSpecialtyContainer.style.display = 'block';
+                            otherSpecialtyInput.required = true;
+                        } else {
+                            otherSpecialtyContainer.style.display = 'none';
+                            otherSpecialtyInput.required = false;
+                            otherSpecialtyInput.value = ''; // Limpiar el campo
+                        }
+                    });
+                });
+            </script>
+
+            <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+            <!-- // Script para editar estudinate -->
+            <script>
+                document.addEventListener('DOMContentLoaded', function () {
+                    const editButtons = document.querySelectorAll('.edit-student');
+                    const editStudentIdInput = document.getElementById('editStudentId');
+                    const editFirstNameInput = document.getElementById('editFirstName');
+                    const editLastNameInput = document.getElementById('editLastName');
+                    const editEmailInput = document.getElementById('editEmail');
+                    const editProgramSelect = document.getElementById('editProgram');
+                    const editObservationsTextarea = document.getElementById('editObservations');
+
+                    editButtons.forEach(button => {
+                        button.addEventListener('click', function () {
+                            const studentId = this.getAttribute('data-id');
+                            const firstName = this.getAttribute('data-firstname');
+                            const lastName = this.getAttribute('data-lastname');
+                            const email = this.getAttribute('data-email');
+                            const program = this.getAttribute('data-program');
+                            const observations = this.getAttribute('data-observations');
+
+                            // Cargar los datos en el formulario
+                            editStudentIdInput.value = studentId;
+                            editFirstNameInput.value = firstName;
+                            editLastNameInput.value = lastName;
+                            editEmailInput.value = email;
+                            editProgramSelect.value = program;
+                            editObservationsTextarea.value = observations;
                         });
-                    </script>
+                    });
+                });
+            </script>
 
-                    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 
-                    <!-- // Script para editar estudinate -->
-                    <script>
-                        document.addEventListener('DOMContentLoaded', function () {
-                            const editButtons = document.querySelectorAll('.edit-student');
-                            const editStudentIdInput = document.getElementById('editStudentId');
-                            const editFirstNameInput = document.getElementById('editFirstName');
-                            const editLastNameInput = document.getElementById('editLastName');
-                            const editEmailInput = document.getElementById('editEmail');
-                            const editProgramSelect = document.getElementById('editProgram');
-                            const editObservationsTextarea = document.getElementById('editObservations');
 
-                            editButtons.forEach(button => {
-                                button.addEventListener('click', function () {
-                                    const studentId = this.getAttribute('data-id');
-                                    const firstName = this.getAttribute('data-firstname');
-                                    const lastName = this.getAttribute('data-lastname');
-                                    const email = this.getAttribute('data-email');
-                                    const program = this.getAttribute('data-program');
-                                    const observations = this.getAttribute('data-observations');
+            <!-- //Script para eliminar estudiante -->
+            <script>
+                document.addEventListener('DOMContentLoaded', function () {
+                    const deleteButtons = document.querySelectorAll('.delete-student');
+                    const deleteStudentIdInput = document.getElementById('deleteStudentId');
 
-                                    // Cargar los datos en el formulario
-                                    editStudentIdInput.value = studentId;
-                                    editFirstNameInput.value = firstName;
-                                    editLastNameInput.value = lastName;
-                                    editEmailInput.value = email;
-                                    editProgramSelect.value = program;
-                                    editObservationsTextarea.value = observations;
-                                });
-                            });
+                    deleteButtons.forEach(button => {
+                        button.addEventListener('click', function () {
+                            const studentId = this.getAttribute('data-id');
+                            deleteStudentIdInput.value = studentId;
                         });
-                    </script>
+                    });
+                });
+            </script>
 
+            <script>
+                document.addEventListener('DOMContentLoaded', function () {
+                    const hash = window.location.hash; // Obtener el hash de la URL
+                    const defaultTab = document.querySelector('a[href="#usuarios"]'); // Pestaña predeterminada (Usuarios)
 
+                    if (hash) {
+                        const tab = document.querySelector(`a[href="${hash}"]`);
+                        if (tab) {
+                            const tabInstance = new bootstrap.Tab(tab);
+                            tabInstance.show(); // Mostrar la pestaña correspondiente al hash
+                        }
+                    } else {
+                        // Si no hay hash, activa la pestaña predeterminada
+                        const defaultTabInstance = new bootstrap.Tab(defaultTab);
+                        defaultTabInstance.show();
+                    }
+                });
+            </script>
 
-                    <!-- //Script para eliminar estudiante -->
-                    <script>
-                        document.addEventListener('DOMContentLoaded', function () {
-                            const deleteButtons = document.querySelectorAll('.delete-student');
-                            const deleteStudentIdInput = document.getElementById('deleteStudentId');
+            <!-- // Script para manejar los modales eliminar y editar docente  -->
+            <script>
+                document.addEventListener('DOMContentLoaded', function () {
+                    // Manejar el modal de edición
+                    const editButtons = document.querySelectorAll('.edit-teacher');
+                    const editTeacherIdInput = document.getElementById('editTeacherId');
+                    const editTeacherFirstNameInput = document.getElementById('editTeacherFirstName');
+                    const editTeacherLastNameInput = document.getElementById('editTeacherLastName');
+                    const editTeacherEmailInput = document.getElementById('editTeacherEmail');
+                    const editTeacherSpecialtySelect = document.getElementById('editTeacherSpecialty');
+                    const editTeacherOtherSpecialtyInput = document.getElementById('editTeacherOtherSpecialty');
+                    const editTeacherCommentsTextarea = document.getElementById('editTeacherComments');
 
-                            deleteButtons.forEach(button => {
-                                button.addEventListener('click', function () {
-                                    const studentId = this.getAttribute('data-id');
-                                    deleteStudentIdInput.value = studentId;
-                                });
-                            });
-                        });
-                    </script>
+                    editButtons.forEach(button => {
+                        button.addEventListener('click', function () {
+                            const teacherId = this.getAttribute('data-id');
+                            const firstName = this.getAttribute('data-firstname');
+                            const lastName = this.getAttribute('data-lastname');
+                            const email = this.getAttribute('data-email');
+                            const specialty = this.getAttribute('data-specialty');
+                            const otherSpecialty = this.getAttribute('data-other-specialty');
+                            const comments = this.getAttribute('data-comments');
 
-                    <script>
-                        document.addEventListener('DOMContentLoaded', function () {
-                            const hash = window.location.hash; // Obtener el hash de la URL
-                            const defaultTab = document.querySelector('a[href="#usuarios"]'); // Pestaña predeterminada (Usuarios)
+                            // Cargar los datos en el formulario
+                            editTeacherIdInput.value = teacherId;
+                            editTeacherFirstNameInput.value = firstName;
+                            editTeacherLastNameInput.value = lastName;
+                            editTeacherEmailInput.value = email;
+                            editTeacherSpecialtySelect.value = specialty;
+                            editTeacherOtherSpecialtyInput.value = otherSpecialty;
+                            editTeacherCommentsTextarea.value = comments;
 
-                            if (hash) {
-                                const tab = document.querySelector(`a[href="${hash}"]`);
-                                if (tab) {
-                                    const tabInstance = new bootstrap.Tab(tab);
-                                    tabInstance.show(); // Mostrar la pestaña correspondiente al hash
-                                }
+                            // Mostrar u ocultar el campo "Otra Especialidad"
+                            const editOtherSpecialtyContainer = document.getElementById('editOtherSpecialtyContainer');
+                            if (specialty === 'Otra') {
+                                editOtherSpecialtyContainer.style.display = 'block';
                             } else {
-                                // Si no hay hash, activa la pestaña predeterminada
-                                const defaultTabInstance = new bootstrap.Tab(defaultTab);
-                                defaultTabInstance.show();
+                                editOtherSpecialtyContainer.style.display = 'none';
                             }
                         });
-                    </script>
+                    });
 
-                    <!-- // Script para manejar los modales eliminar y editar docente  -->
-                    <script>
-                        document.addEventListener('DOMContentLoaded', function () {
-                            // Manejar el modal de edición
-                            const editButtons = document.querySelectorAll('.edit-teacher');
-                            const editTeacherIdInput = document.getElementById('editTeacherId');
-                            const editTeacherFirstNameInput = document.getElementById('editTeacherFirstName');
-                            const editTeacherLastNameInput = document.getElementById('editTeacherLastName');
-                            const editTeacherEmailInput = document.getElementById('editTeacherEmail');
-                            const editTeacherSpecialtySelect = document.getElementById('editTeacherSpecialty');
-                            const editTeacherOtherSpecialtyInput = document.getElementById('editTeacherOtherSpecialty');
-                            const editTeacherCommentsTextarea = document.getElementById('editTeacherComments');
+                    // Manejar el modal de eliminación
+                    const deleteButtons = document.querySelectorAll('.delete-teacher');
+                    const deleteTeacherIdInput = document.getElementById('deleteTeacherId');
 
-                            editButtons.forEach(button => {
-                                button.addEventListener('click', function () {
-                                    const teacherId = this.getAttribute('data-id');
-                                    const firstName = this.getAttribute('data-firstname');
-                                    const lastName = this.getAttribute('data-lastname');
-                                    const email = this.getAttribute('data-email');
-                                    const specialty = this.getAttribute('data-specialty');
-                                    const otherSpecialty = this.getAttribute('data-other-specialty');
-                                    const comments = this.getAttribute('data-comments');
-
-                                    // Cargar los datos en el formulario
-                                    editTeacherIdInput.value = teacherId;
-                                    editTeacherFirstNameInput.value = firstName;
-                                    editTeacherLastNameInput.value = lastName;
-                                    editTeacherEmailInput.value = email;
-                                    editTeacherSpecialtySelect.value = specialty;
-                                    editTeacherOtherSpecialtyInput.value = otherSpecialty;
-                                    editTeacherCommentsTextarea.value = comments;
-
-                                    // Mostrar u ocultar el campo "Otra Especialidad"
-                                    const editOtherSpecialtyContainer = document.getElementById('editOtherSpecialtyContainer');
-                                    if (specialty === 'Otra') {
-                                        editOtherSpecialtyContainer.style.display = 'block';
-                                    } else {
-                                        editOtherSpecialtyContainer.style.display = 'none';
-                                    }
-                                });
-                            });
-
-                            // Manejar el modal de eliminación
-                            const deleteButtons = document.querySelectorAll('.delete-teacher');
-                            const deleteTeacherIdInput = document.getElementById('deleteTeacherId');
-
-                            deleteButtons.forEach(button => {
-                                button.addEventListener('click', function () {
-                                    const teacherId = this.getAttribute('data-id');
-                                    deleteTeacherIdInput.value = teacherId;
-                                });
-                            });
+                    deleteButtons.forEach(button => {
+                        button.addEventListener('click', function () {
+                            const teacherId = this.getAttribute('data-id');
+                            deleteTeacherIdInput.value = teacherId;
                         });
-                    </script>
+                    });
+                });
+            </script>
 </body>
 <!-- Footer -->
 <?php include "shared/footer.php"; ?>
