@@ -1,5 +1,6 @@
 <?php
 include "../includes/db_config.php";
+require 'vendor/autoload.php'; // Cargar PHPMailer
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $id = $_POST['id'];
