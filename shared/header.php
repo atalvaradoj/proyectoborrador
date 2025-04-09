@@ -36,13 +36,18 @@
     <link rel="stylesheet" href="css/main.css">
 </head>
 <body>
+    <!-- Botón de Cerrar Sesión -->
+    <?php if (basename($_SERVER['PHP_SELF']) !== 'index.php'): ?>
+        <div class="logout-container">
+            <link rel="stylesheet" href="css/logout.css">
+            <a href="logout.php" class="btn btn-danger btn-sm">Cerrar Sesión</a>
+        </div>
+    <?php endif; ?>
+
     <!-- Barra lateral -->
     <div class="sidebar">
         <h4 class="text-center">Sistema Académico</h4>
         <ul class="nav flex-column">
-            <li class="nav-item">
-                <a class="nav-link" href="shared/base_admin.php">Administracion</a>
-            </li>
             <li class="nav-item">
                 <a class="nav-link" href="registro.php">Registro</a>
             </li>

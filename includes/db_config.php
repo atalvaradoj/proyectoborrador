@@ -4,7 +4,7 @@
 function getConnection() {
     $servername = "localhost";
     $username = "root";  // Cambia esto por tu usuario de MySQL
-    $password = "";      // Cambia esto por tu contraseña de MySQL
+    $password = "root";      // Cambia esto por tu contraseña de MySQL
     $dbname = "sistema_academico";  // Cambia esto por el nombre de tu base de datos
     
     // Crear conexión
