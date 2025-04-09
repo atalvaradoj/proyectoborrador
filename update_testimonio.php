@@ -2,6 +2,9 @@
 include "../includes/db_config.php";
 require 'vendor/autoload.php'; // Cargar PHPMailer
 
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\Exception;
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $id = $_POST['id'];
     $nombre = $_POST['nombre'];
