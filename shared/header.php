@@ -36,6 +36,14 @@
     <link rel="stylesheet" href="css/main.css">
 </head>
 <body>
+    <!-- Botón de Cerrar Sesión -->
+    <?php if (basename($_SERVER['PHP_SELF']) !== 'index.php'): ?>
+        <div class="logout-container">
+            <link rel="stylesheet" href="css/logout.css">
+            <a href="logout.php" class="btn btn-danger btn-sm">Cerrar Sesión</a>
+        </div>
+    <?php endif; ?>
+
     <!-- Barra lateral -->
     <div class="sidebar">
         <h4 class="text-center">Sistema Académico</h4>

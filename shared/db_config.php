@@ -1,7 +1,7 @@
 <?php
 $servername = "localhost"; // Servidor de la base de datos
 $username = "root"; // Usuario de MySQL (cambia si es necesario)
-$password = ""; // Contraseña (déjala vacía si no tienes una)
+$password = "root"; // Contraseña (déjala vacía si no tienes una)Tables
 $dbname = "sistema_academico"; 
 
 // Crear la conexión
