@@ -78,6 +78,8 @@ session_start();
                 </li>
             <?php else: ?>
                 <li class="nav-item">
+                    <a class="nav-link" href="index.php">Identificarse</a>
+                <li class="nav-item">
                     <a class="nav-link" href="apicontactenos.php">Mapa</a>
                 </li>
                 <li class="nav-item">
