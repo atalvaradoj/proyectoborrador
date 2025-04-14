@@ -1,5 +1,10 @@
 <?php
 require 'vendor/autoload.php'; // Cargar PHPMailer
+
+// Verificar si el archivo db_config.php existe antes de incluirlo
+if (!file_exists("../includes/db_config.php")) {
+    die("Error: El archivo db_config.php no se encuentra en la ruta especificada.");
+}
 include "../includes/db_config.php"; // Cargar configuración de la base de datos
 
 use PHPMailer\PHPMailer\PHPMailer;
@@ -12,10 +17,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $telefono = htmlspecialchars($_POST['telefono']);
     $mensaje = htmlspecialchars($_POST['mensaje']);
 
-    // Guardar los datos en la base de datos
+    // Verificar si la conexión a la base de datos es exitosa
     $conn = getConnection();
+    if (!$conn) {
+        die("Error: No se pudo conectar a la base de datos. " . mysqli_connect_error());
+    }
+
+    // Guardar los datos en la base de datos
     $sql = "INSERT INTO contactos (nombre, email, telefono, mensaje) VALUES (?, ?, ?, ?)";
     $stmt = $conn->prepare($sql);
+    if (!$stmt) {
+        die("Error: No se pudo preparar la consulta. " . $conn->error);
+    }
     $stmt->bind_param("ssss", $nombre, $email, $telefono, $mensaje);
 
     if ($stmt->execute()) {
@@ -25,7 +38,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         try {
             // Configuración del servidor SMTP
             $mail->isSMTP();
-            $mail->Host = 'smtp.example.com'; // Cambia esto por tu servidor SMTP
+            $mail->Host = 'smtp.gmail.com'; // Cambia esto por tu servidor SMTP
             $mail->SMTPAuth = true;
             $mail->Username = 'mikirourke09@gmail.com'; // Cambia esto por tu correo
             $mail->Password = 'qzof dkvr reny zezb'; // Cambia esto por tu contraseña
