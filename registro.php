@@ -393,17 +393,168 @@
                 </div>
             </div>
 
-            <!-- Administración de Grupos -->
-            <div class="tab-pane fade" id="grupos" role="tabpanel">
-                <h3>Administración de Grupos</h3>
-                <button class="btn btn-primary btn-add" data-bs-toggle="modal" data-bs-target="#addGrupoModal">
-                    <i class="fas fa-users-cog me-2"></i>Agregar Grupo
-                </button>
-                <div class="table-container">
-                    <p>Tabla de grupos pendiente de implementar.</p>
+<!-- Administración de Grupos -->
+<div class="tab-pane fade" id="grupos" role="tabpanel">
+    <h3>Administración de Grupos</h3>
+    <button class="btn btn-primary btn-add" data-bs-toggle="modal" data-bs-target="#addGrupoModal">
+        <i class="fas fa-users me-2"></i> Agregar Grupo
+    </button>
+    <div class="table-container">
+        <table class="table table-striped table-hover">
+            <thead class="table-primary">
+                <tr>
+                    <th>ID Grupo</th>
+                    <th>Grupo</th>
+                    <th>Docente</th>
+                    <th>Estudiantes</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php
+                // Consulta para obtener los grupos con información del docente
+                $sql = "SELECT g.ID_grupo, g.Nombre_grupo, d.Nombres AS Docente_Nombre, d.Apellidos AS Docente_Apellido
+                        FROM grupos g
+                        JOIN docentes d ON g.ID_docente = d.ID_docente
+                        ORDER BY g.ID_grupo DESC";
+                $result = $conn->query($sql);
+
+                if ($result && $result->num_rows > 0):
+                    while ($row = $result->fetch_assoc()):
+                        // Obtener los estudiantes del grupo
+                        $id_grupo = $row['ID_grupo'];
+                        $sql_estudiantes = "SELECT e.Nombres, e.Apellidos FROM grupo_estudiante ge
+                                            JOIN estudiantes e ON ge.ID_estudiante = e.ID_estudiante
+                                            WHERE ge.ID_grupo = $id_grupo";
+                        $result_estudiantes = $conn->query($sql_estudiantes);
+                        
+                        // Construir la lista de estudiantes
+                        $estudiantes_lista = [];
+                        if ($result_estudiantes && $result_estudiantes->num_rows > 0) {
+                            while ($estudiante = $result_estudiantes->fetch_assoc()) {
+                                $estudiantes_lista[] = htmlspecialchars($estudiante['Nombres'] . ' ' . $estudiante['Apellidos']);
+                            }
+                        }
+                        $estudiantes_str = implode(", ", $estudiantes_lista);
+                ?>
+                    <tr>
+                        <td><?php echo htmlspecialchars($row['ID_grupo']); ?></td>
+                        <td><?php echo htmlspecialchars($row['Nombre_grupo']); ?></td>
+                        <td><?php echo htmlspecialchars($row['Docente_Nombre'] . ' ' . $row['Docente_Apellido']); ?></td>
+                        <td><?php echo !empty($estudiantes_str) ? $estudiantes_str : "Sin estudiantes asignados"; ?></td>
+                        <td>
+                            <button class="btn btn-warning btn-sm edit-group" 
+                                data-id="<?php echo htmlspecialchars($row['ID_grupo']); ?>"
+                                data-name="<?php echo htmlspecialchars($row['Nombre_grupo']); ?>"
+                                data-teacher="<?php echo htmlspecialchars($row['Docente_Nombre'] . ' ' . $row['Docente_Apellido']); ?>"
+                                data-bs-toggle="modal" 
+                                data-bs-target="#editGrupoModal">
+                                <i class="fas fa-edit"></i> Editar
+                            </button>
+                            <button class="btn btn-danger btn-sm delete-group" 
+                                data-id="<?php echo htmlspecialchars($row['ID_grupo']); ?>"
+                                data-bs-toggle="modal" 
+                                data-bs-target="#deleteGrupoModal">
+                                <i class="fas fa-trash"></i> Eliminar
+                            </button>
+                        </td>
+                    </tr>
+                <?php
+                    endwhile;
+                else:
+                ?>
+                    <tr>
+                        <td colspan="5" class="text-center">No hay grupos registrados.</td>
+                    </tr>
+                <?php endif; ?>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+            <!-- Modal para Agregar Grupo -->
+            <div class="modal fade" id="addGrupoModal" tabindex="-1" aria-labelledby="addGrupoModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-lg">
+                    <div class="modal-content">
+                        <div class="modal-header bg-primary text-white">
+                            <h5 class="modal-title" id="addGrupoModalLabel">
+                                <i class="fas fa-users me-2"></i> Agregar Nuevo Grupo
+                            </h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <form id="addGrupoForm" method="post" action="controllers/save_group.php">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="mb-3">
+                                            <label for="nombreGrupo" class="form-label">Nombre del Grupo</label>
+                                            <input type="text" class="form-control" id="nombreGrupo" name="Nombre_grupo" required>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="mb-3">
+                                            <label for="docente" class="form-label">Docente</label>
+                                            <select class="form-select" id="docente" name="ID_docente" required>
+                                                <option value="">Seleccione un Docente</option>
+                                                <!-- Opciones dinámicas para los docentes -->
+                                                <?php
+                                                // Conexión y carga de docentes
+                                                try {
+                                                    $pdo = new PDO("mysql:host=localhost;dbname=sistema_academico;charset=utf8", "root", "");
+                                                    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+                                                    $docentes = $pdo->query("SELECT ID_docente, CONCAT(Nombres, ' ', Apellidos) AS NombreCompleto FROM docentes")->fetchAll(PDO::FETCH_ASSOC);
+                                                    foreach ($docentes as $docente) {
+                                                        echo '<option value="' . $docente['ID_docente'] . '">' . $docente['NombreCompleto'] . '</option>';
+                                                    }
+                                                } catch (PDOException $e) {
+                                                    echo '<option value="">Error al cargar docentes</option>';
+                                                }
+                                                ?>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="mb-3">
+                                            <label for="estudiantes" class="form-label">Seleccionar Estudiantes</label>
+                                            <select class="form-select" id="estudiantes" name="ID_estudiante[]" multiple required>
+                                                <!-- Opciones dinámicas para los estudiantes -->
+                                                <?php
+                                                // Conexión y carga de estudiantes
+                                                try {
+                                                    $estudiantes = $pdo->query("SELECT ID_estudiante, CONCAT(Nombres, ' ', Apellidos) AS NombreCompleto FROM estudiantes")->fetchAll(PDO::FETCH_ASSOC);
+                                                    foreach ($estudiantes as $estudiante) {
+                                                        echo '<option value="' . $estudiante['ID_estudiante'] . '">' . $estudiante['NombreCompleto'] . '</option>';
+                                                    }
+                                                } catch (PDOException $e) {
+                                                    echo '<option value="">Error al cargar estudiantes</option>';
+                                                }
+                                                ?>
+                                            </select>
+                                            <small class="form-text text-muted">Mantén presionada la tecla <strong>Ctrl</strong> (o Cmd en Mac) para seleccionar múltiples estudiantes.</small>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="mb-3">
+                                            <label for="comentariosGrupo" class="form-label">Comentarios</label>
+                                            <textarea class="form-control" id="comentariosGrupo" name="Comentarios" rows="3"></textarea>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                            <button type="submit" class="btn btn-primary" form="addGrupoForm">
+                                <i class="fas fa-save me-1"></i> Guardar Grupo
+                            </button>
+                        </div>
+                    </div>
                 </div>
             </div>
-
             <!-- Administración de Notas -->
             <div class="tab-pane fade" id="notas" role="tabpanel">
                 <h3>Administración de Notas</h3>

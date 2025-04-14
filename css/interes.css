@@ -1,0 +1,58 @@
+/* Estilo general del cuerpo */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-image: url('../img/young-friends-park.jpg'); /* Ruta de la imagen de fondo */
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+    color: #333;
+}
+
+/* Contenedor principal */
+.container {
+    background-color: rgba(255, 255, 255, 0.9); /* Fondo blanco semitransparente */
+    border-radius: 10px;
+    padding: 30px;
+    margin-top: 50px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+/* Encabezado */
+.header h1 {
+    font-size: 2.5rem;
+    color: #000000; /* Azul consistente con Bootstrap */
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+/* Contenido */
+.content h2 {
+    font-size: 1.6rem;
+    color: #323333; /* Azul más oscuro */
+    margin-bottom: 20px;
+    text-align: left; /* Alinea el texto hacia la izquierda */
+}
+
+.content p {
+    font-size: 1.1rem;
+    line-height: 1.6;
+    color: #555;
+    text-align: justify;
+}
+
+/* Botón */
+.content .btn-primary {
+    background-color: #007bff;
+    border: none;
+    padding: 10px 20px;
+    font-size: 1rem;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
+}
+
+.content .btn-primary:hover {
+    background-color: #0056b3;
+    color: #fff;
+}
