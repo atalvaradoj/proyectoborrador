@@ -48,7 +48,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             // Configuración del correo
             $mail->setFrom('no-reply@example.com', 'Formulario de Contacto'); // Cambia esto por un correo válido
             $mail->addAddress($email); // Enviar al correo del usuario
-            $mail->addAddress('correo_destinatario@example.com'); // Enviar al correo designado (administrador)
+            $mail->addAddress('mikirourke09@gmail.com'); // Enviar al correo designado (administrador)
 
             $mail->isHTML(true);
             $mail->Subject = 'Confirmación de envío de contacto';
