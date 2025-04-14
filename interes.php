@@ -2,28 +2,23 @@
 <main>
     <title>Elegir una Escuela</title>
 
-    <!-- Agregar Bootstrap CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-
-    <!-- Estilo Personalizado -->
+    <!-- Incluimos el archivo CSS personalizado -->
+    <link rel="stylesheet" href="css/interes.css">
 
     <body>
 
         <div class="container">
             <div class="header">
-                <h1>¿Por qué elegir una escuela?</h1>
+                <h1>¿Por qué elegirnos?</h1>
             </div>
 
             <div class="content">
-                <h2>Elige con sabiduría, invierte en tu futuro</h2>
-                <p>Elegir una escuela es una de las decisiones más importantes que un estudiante y su familia pueden tomar, ya que el entorno educativo influye directamente en el desarrollo académico y personal. Una buena escuela no solo proporciona una educación de calidad, sino que también fomenta el crecimiento integral de los estudiantes, ofreciendo programas que impulsan su creatividad, habilidades sociales y deportivas. Además, una escuela con un enfoque en la innovación y el uso de tecnología prepara a los estudiantes para enfrentar los desafíos del futuro. Al elegir una escuela, es esencial considerar aspectos como la calidad de sus docentes, los valores que promueve, la infraestructura, las actividades extracurriculares y, por supuesto, el ambiente de respeto y seguridad que brinda a sus alumnos.</p>
+                <h2>Elige con sabiduría, invierte en el futuro de tus hijos</h2>
+                <p>Elegir la escuela adecuada para su hijo(a) es una decisión fundamental que impactará su desarrollo académico, personal y social. En nuestra institución, ofrecemos un entorno seguro y estimulante, donde cada estudiante recibe una educación integral basada en la excelencia académica, los valores y el desarrollo de habilidades para el futuro. Contamos con un equipo docente altamente calificado, tecnología de vanguardia y programas innovadores que fomentan el pensamiento crítico y la creatividad. Nuestro compromiso es proporcionar una formación de calidad que prepare a su hijo para los retos del mundo actual, asegurando su crecimiento en un ambiente de respeto y aprendizaje continuo.</p>
                 <a href="registro.html" class="btn btn-primary">Explora nuestras opciones educativas</a>
             </div>
         </div>
 
-        <!-- Agregar Bootstrap JS y dependencias -->
-        <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js"></script>
     </body>
 
 </main>

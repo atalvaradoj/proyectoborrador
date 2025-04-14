@@ -11,20 +11,29 @@
 </head>
 <body>
     <form action="IniciarSesion.php" method="post">
-        <h1>Iniciar sesion</h1>
-        <img src="img/UserIcon.png" alt="Logo" class="logo">
+        <h1>Iniciar sesión</h1>
+        <img src="img/logoinicio.png" alt="Logo" class="logo">
         <i class="fa-solid fa-user"></i>
         <label>Usuario</label>
-        <input type="text" name="c" placeholder="Nombre de usuario">
+        <input type="text" name="c" placeholder="Correo o ID de usuario" required>
 
         <i class="fa-solid fa-unlock"></i>
         <label>Contraseña</label>
-        <input type="password" name="Contraseña" placeholder="Contraseña del usuario">
+        <input type="password" name="Contraseña" placeholder="Contraseña del usuario" required>
 
-        <button type="sumit">Iniciar Sesion</button>
+        <button type="submit">Iniciar Sesión</button>
         <a href="solicitud_usuario.php">Crear cuenta</a>
-        
     </form>
+
+    <!-- Mostrar mensajes de error -->
+    <?php if (isset($_SESSION['error_message'])): ?>
+        <div class="alert alert-danger">
+            <?php
+            echo $_SESSION['error_message'];
+            unset($_SESSION['error_message']);
+            ?>
+        </div>
+    <?php endif; ?>
 
     <!-- Agregar el enlace para recordar contraseña -->
     <div class="remember-password">
