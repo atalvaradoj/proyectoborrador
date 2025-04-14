@@ -76,9 +76,13 @@ session_start();
                 <li class="nav-item">
                     <a class="nav-link" href="registro.php">Registro</a>
                 </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="Admin_Aprobar_Solicitudes.php">Aprobar Solicitud</a>
+                </li>
             <?php else: ?>
                 <li class="nav-item">
                     <a class="nav-link" href="index.php">Identificarse</a>
+                </li>
                 <li class="nav-item">
                     <a class="nav-link" href="apicontactenos.php">Mapa</a>
                 </li>
