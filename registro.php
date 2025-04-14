@@ -67,7 +67,10 @@
         <ul class="nav nav-tabs" id="adminTabs" role="tablist">
             <li class="nav-item">
                 <a class="nav-link active" id="usuarios-tab" data-bs-toggle="tab" href="#usuarios"
-                    role="tab">Usuarios</a>
+                    role="tab">Administración de Usuarios</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" id="padres-tab" data-bs-toggle="tab" href="#padres" role="tab">Padres</a>
             </li>
             <li class="nav-item">
                 <a class="nav-link" id="docentes-tab" data-bs-toggle="tab" href="#docentes" role="tab">Docentes</a>
@@ -89,9 +92,6 @@
             <!-- Administración de Usuarios -->
             <div class="tab-pane fade show active" id="usuarios" role="tabpanel">
                 <h3>Administración de Usuarios</h3>
-                <button class="btn btn-primary btn-add" data-bs-toggle="modal" data-bs-target="#addUserModal">
-                    <i class="fas fa-user-plus me-2"></i>Agregar Usuario
-                </button>
                 <div class="table-container">
                     <table class="table table-striped table-hover">
                         <thead class="table-primary">
@@ -99,26 +99,127 @@
                                 <th>ID</th>
                                 <th>Nombre</th>
                                 <th>Correo</th>
+                                <th>Teléfono</th>
                                 <th>Rol</th>
-                                <th>Acciones</th>
+                                <th>Estado</th>
+                                <th>Acción</th>
                             </tr>
                         </thead>
                         <tbody>
-                            <!-- Aquí irían los datos dinámicos -->
+                            <!-- Aquí van los datos dinámicos -->
                             <tr>
-                                <td>1</td>
-                                <td>Juan Pérez</td>
-                                <td>juan.perez@example.com</td>
-                                <td>Administrador</td>
-                                <td>
-                                    <button class="btn btn-warning btn-sm">
-                                        <i class="fas fa-edit"></i> Editar
-                                    </button>
-                                    <button class="btn btn-danger btn-sm">
-                                        <i class="fas fa-trash"></i> Eliminar
-                                    </button>
-                                </td>
+                                <?php
+                                // Conexión a la base de datos
+                                include "includes/db_config.php";
+                                $conn = getConnection();
+
+                                // Consulta para obtener los usuarios
+                                $sql = "SELECT * FROM usuarios ORDER BY ID_usuario DESC";
+                                $result = $conn->query($sql);
+
+                                if ($result && $result->num_rows > 0):
+                                    while ($row = $result->fetch_assoc()):
+                                        ?>
+                                    <tr>
+                                        <td><?php echo htmlspecialchars($row['ID_usuario']); ?></td>
+                                        <td><?php echo htmlspecialchars($row['Nombres']); ?></td>
+                                        <td><?php echo htmlspecialchars($row['Correo']); ?></td>
+                                        <td><?php echo htmlspecialchars($row['telefono']); ?></td>
+                                        <td><?php echo htmlspecialchars($row['Rol']); ?></td>
+                                        <td><?php echo htmlspecialchars($row['Estado']); ?></td>
+                                        <td>
+                                            <button class="btn btn-danger btn-sm delete-user"
+                                                data-id="<?php echo htmlspecialchars($row['ID_usuario']); ?>"
+                                                data-bs-toggle="modal" data-bs-target="#deleteUserModal">
+                                                <i class="fas fa-trash"></i> Eliminar
+                                            </button>
+                                        </td>
+                                    </tr>
+                                    <?php
+                                    endwhile;
+                                else:
+                                    ?>
+                                <tr>
+                                    <td colspan="7" class="text-center">No hay usuarios registrados.</td>
+                                </tr>
+                            <?php endif; ?>
                             </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Modal para Eliminar Usuario -->
+            <div class="modal fade" id="deleteUserModal" tabindex="-1" aria-labelledby="deleteUserModalLabel"
+                aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header bg-danger text-white">
+                            <h5 class="modal-title" id="deleteUserModalLabel">
+                                <i class="fas fa-trash me-2"></i> Eliminar Usuario
+                            </h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <p>¿Está seguro de que desea eliminar este usuario?</p>
+                            <form id="deleteUserForm" method="post" action="controllers/delete_user.php">
+                                <input type="hidden" id="deleteUserId" name="ID_usuario">
+                            </form>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                            <button type="submit" class="btn btn-danger" form="deleteUserForm">
+                                <i class="fas fa-trash me-1"></i> Eliminar
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="tab-pane fade" id="padres" role="tabpanel">
+                <h3>Administración de Padres</h3>
+                <div class="table-container">
+                    <table class="table table-striped table-hover">
+                        <thead class="table-primary">
+                            <tr>
+                                <th>ID</th>
+                                <th>Nombre</th>
+                                <th>Correo</th>
+                                <th>Teléfono</th>
+                                <th>Acción</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php
+
+                            // Consulta para obtener solo los usuarios con el rol de "padres"
+                            $sql = "SELECT * FROM usuarios WHERE Rol = 'padres' ORDER BY ID_usuario DESC";
+                            $result = $conn->query($sql);
+
+                            if ($result && $result->num_rows > 0):
+                                while ($row = $result->fetch_assoc()):
+                                    ?>
+                                    <tr>
+                                        <td><?php echo htmlspecialchars($row['ID_usuario']); ?></td>
+                                        <td><?php echo htmlspecialchars($row['Nombres']); ?></td>
+                                        <td><?php echo htmlspecialchars($row['Correo']); ?></td>
+                                        <td><?php echo htmlspecialchars($row['telefono']); ?></td>
+                                        <td>
+                                            <button class="btn btn-danger btn-sm delete-user"
+                                                data-id="<?php echo htmlspecialchars($row['ID_usuario']); ?>"
+                                                data-bs-toggle="modal" data-bs-target="#deleteUserModal">
+                                                <i class="fas fa-trash"></i> Eliminar
+                                            </button>
+                                        </td>
+                                    </tr>
+                                    <?php
+                                endwhile;
+                            else:
+                                ?>
+                                <tr>
+                                    <td colspan="6" class="text-center">No hay padres registrados.</td>
+                                </tr>
+                            <?php endif; ?>
                         </tbody>
                     </table>
                 </div>
@@ -143,9 +244,6 @@
                         </thead>
                         <tbody>
                             <?php
-                            // Conexión a la base de datos
-                            include "includes/db_config.php";
-                            $conn = getConnection();
 
                             // Consulta para obtener los docentes
                             $sql = "SELECT * FROM docentes ORDER BY ID_docente DESC";
@@ -788,6 +886,21 @@
                         button.addEventListener('click', function () {
                             const teacherId = this.getAttribute('data-id');
                             deleteTeacherIdInput.value = teacherId;
+                        });
+                    });
+                });
+            </script>
+
+            <!-- // Script para manejar el modal de eliminar usuario -->
+            <script>
+                document.addEventListener('DOMContentLoaded', function () {
+                    const deleteButtons = document.querySelectorAll('.delete-user');
+                    const deleteUserIdInput = document.getElementById('deleteUserId');
+
+                    deleteButtons.forEach(button => {
+                        button.addEventListener('click', function () {
+                            const userId = this.getAttribute('data-id');
+                            deleteUserIdInput.value = userId;
                         });
                     });
                 });
