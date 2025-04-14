@@ -41,10 +41,6 @@
         <p>Si olvidó su contraseña, Click aqui para enviarle una nueva contraseña a su dirección de correo electrónico.</p>
     </div>
 
-0    <?php
-    $contrasenaHasheada = password_hash($contrasena, PASSWORD_DEFAULT);
-    ?>
-
 </body>
 
 <footer>
