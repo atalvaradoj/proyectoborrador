@@ -8,9 +8,9 @@
             <div class="col-md-6">
                 <div class="contact-info mb-4">
                     <h4>Información de Contacto</h4>
-                    <p><strong>Dirección:</strong> Liceo Ing. Samuel Sáenz Flores, San José, Costa Rica</p>
+                    <p><strong>Dirección:</strong> Costado Sur del Estadio de Heredia, Heredia</p>
                     <p><strong>Teléfono:</strong> (506) 2222-3333</p>
-                    <p><strong>Email:</strong> info@ejemplo.com</p>
+                    <p><strong>Email:</strong> info@lagalletaestudiosa.com</p>
                     <p><strong>Horario:</strong> Lunes a Viernes 8:00 AM - 5:00 PM</p>
                 </div>
             </div>

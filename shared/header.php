@@ -70,7 +70,7 @@ session_start();
 
     <!-- Barra lateral -->
     <div class="sidebar">
-        <h4 class="text-center">Sistema Académico</h4>
+        <h4 class="text-center">Sistema Escolar</h4>
         <ul class="nav flex-column">
             <?php if (isset($_SESSION['user_id'])): ?>
                 <li class="nav-item">
