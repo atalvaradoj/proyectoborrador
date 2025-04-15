@@ -88,8 +88,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         exit();
     }
 
+
     // Cerrar la conexión
-    $stmt->close();
+    if ($stmt->close())
+        ;
     $conn->close();
 } else {
     // Si no es una solicitud POST, redirigir al formulario
@@ -97,7 +99,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     exit();
 }
 ?>
-
 <?php if (isset($_GET['status'])): ?>
     <div class="alert alert-<?php echo $_GET['status'] === 'success' ? 'success' : 'danger'; ?> mt-3">
         <?php echo htmlspecialchars(urldecode($_GET['message'] ?? ($_GET['status'] === 'success' ? 'Mensaje enviado correctamente.' : 'Ocurrió un error.'))); ?>
