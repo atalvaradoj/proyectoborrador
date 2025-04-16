@@ -1,3 +1,6 @@
+<?php
+session_start();
+?>
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -37,32 +40,62 @@
 </head>
 <body>
     <!-- Botón de Cerrar Sesión -->
-    <?php if (basename($_SERVER['PHP_SELF']) !== 'index.php'): ?>
+    <?php if (basename($_SERVER['PHP_SELF']) !== 'index.php' && isset($_SESSION['user_id'])): ?>
         <div class="logout-container">
             <link rel="stylesheet" href="css/logout.css">
-            <a href="logout.php" class="btn btn-danger btn-sm">Cerrar Sesión</a>
+            <button class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#logoutModal">
+                Cerrar Sesión
+            </button>
         </div>
     <?php endif; ?>
 
+    <!-- Modal de Confirmación para Cerrar Sesión -->
+    <div class="modal fade" id="logoutModal" tabindex="-1" aria-labelledby="logoutModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header bg-danger text-white">
+                    <h5 class="modal-title" id="logoutModalLabel">Confirmar Cierre de Sesión</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p>¿Está seguro de que desea cerrar sesión?</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <a href="logout.php" class="btn btn-danger">Cerrar Sesión</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- Barra lateral -->
     <div class="sidebar">
-        <h4 class="text-center">Sistema Académico</h4>
+        <h4 class="text-center">Sistema Escolar</h4>
         <ul class="nav flex-column">
-            <li class="nav-item">
-                <a class="nav-link" href="registro.php">Registro</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="apicontactenos.php">Mapa</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="interes.php">¿Por qué elegirnos?</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="testimonios.php">Testimonios</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="servicios.php">Servicios</a>
-            </li>
+            <?php if (isset($_SESSION['user_id'])): ?>
+                <li class="nav-item">
+                    <a class="nav-link" href="registro.php">Registro</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="Admin_Aprobar_Solicitudes.php">Aprobar Solicitud</a>
+                </li>
+            <?php else: ?>
+                <li class="nav-item">
+                    <a class="nav-link" href="index.php">Identificarse</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="apicontactenos.php">Mapa</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="interes.php">¿Por qué elegirnos?</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="testimonios.php">Testimonios</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="servicios.php">Servicios</a>
+                </li>
+            <?php endif; ?>
         </ul>
     </div>
 

@@ -45,7 +45,8 @@
 </style>
 
 <?php
-// Procesamiento del formulario
+include "includes/db_config.php"; // Asegúrate de incluir la conexión a la base de datos
+
 $mensaje = '';
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Validar y sanitizar los datos
@@ -54,21 +55,26 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     // Verificar que los campos no estén vacíos
     if (!empty($nombre) && !empty($testimonio)) {
-        // Aquí normalmente conectarías con una base de datos
-        // Por ahora, guardaremos en un archivo de texto como ejemplo
-        $nuevo_testimonio = "Nombre: $nombre\nTestimonio: $testimonio\nFecha: " . date('Y-m-d H:i:s') . "\n---\n";
+        $conn = getConnection(); // Obtener la conexión a la base de datos
+        $sql = "INSERT INTO testimonios (nombre, testimonio) VALUES (?, ?)";
+        $stmt = $conn->prepare($sql);
 
-        if (file_put_contents('testimonios.txt', $nuevo_testimonio, FILE_APPEND | LOCK_EX)) {
-            $mensaje = '<div class="alert alert-success alert-dismissible fade show mt-3" role="alert">
-                        <i class="fas fa-check-circle me-2"></i>¡Gracias por compartir tu testimonio!
-                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                      </div>';
-        } else {
-            $mensaje = '<div class="alert alert-danger alert-dismissible fade show mt-3" role="alert">
-                        <i class="fas fa-exclamation-circle me-2"></i>Hubo un problema al guardar tu testimonio.
-                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                      </div>';
+        if ($stmt) {
+            $stmt->bind_param("ss", $nombre, $testimonio);
+            if ($stmt->execute()) {
+                $mensaje = '<div class="alert alert-success alert-dismissible fade show mt-3" role="alert">
+                            <i class="fas fa-check-circle me-2"></i>¡Gracias por compartir tu testimonio!
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                          </div>';
+            } else {
+                $mensaje = '<div class="alert alert-danger alert-dismissible fade show mt-3" role="alert">
+                            <i class="fas fa-exclamation-circle me-2"></i>Hubo un problema al guardar tu testimonio.
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                          </div>';
+            }
+            $stmt->close();
         }
+        $conn->close();
     } else {
         $mensaje = '<div class="alert alert-warning alert-dismissible fade show mt-3" role="alert">
                     <i class="fas fa-exclamation-triangle me-2"></i>Por favor completa todos los campos.
@@ -81,8 +87,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 <div class="container mt-5">
     <h1 class="text-center mb-4">Testimonios</h1>
 
-    <?php if (!empty($mensaje))
-        echo $mensaje; ?>
+    <?php if (!empty($mensaje)) echo $mensaje; ?>
 
     <!-- Formulario simple para testimonios -->
     <div class="row justify-content-center mt-4">
@@ -107,33 +112,35 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         </div>
     </div>
 
-    <!-- Testimonios de ejemplo -->
+    <!-- Mostrar testimonios -->
     <h3 class="text-center mt-5 mb-4" style="color: #007bff;">Lo que dicen nuestros clientes</h3>
     <div class="row mt-4">
+        <?php
+        $conn = getConnection(); // Obtener la conexión a la base de datos
+        $sql = "SELECT nombre, testimonio, fecha FROM testimonios ORDER BY fecha DESC";
+        $result = $conn->query($sql);
+
+        if ($result && $result->num_rows > 0):
+            while ($row = $result->fetch_assoc()):
+        ?>
         <div class="col-md-4 mb-3">
             <div class="card h-100">
                 <div class="card-body">
-                    <h5>Ana García</h5>
-                    <p>Excelente servicio, muy recomendado.</p>
+                    <h5><?php echo htmlspecialchars($row['nombre']); ?></h5>
+                    <p><?php echo htmlspecialchars($row['testimonio']); ?></p>
+                    <small class="text-muted"><?php echo date("d/m/Y H:i", strtotime($row['fecha'])); ?></small>
                 </div>
             </div>
         </div>
-        <div class="col-md-4 mb-3">
-            <div class="card h-100">
-                <div class="card-body">
-                    <h5>Carlos Rodríguez</h5>
-                    <p>Muy satisfecho con la atención recibida.</p>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-4 mb-3">
-            <div class="card h-100">
-                <div class="card-body">
-                    <h5>Laura Martínez</h5>
-                    <p>Los resultados superaron mis expectativas.</p>
-                </div>
-            </div>
-        </div>
+        <?php
+            endwhile;
+        else:
+        ?>
+        <p class="text-center">No hay testimonios disponibles.</p>
+        <?php
+        endif;
+        $conn->close();
+        ?>
     </div>
 </div>
 
