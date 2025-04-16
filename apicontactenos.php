@@ -1,4 +1,4 @@
-<?php include "shared/header.php" ?>
+<?php include "shared/header.php"; ?>
 
 <main class="container">
     <!-- Sección de Contacto -->
@@ -8,9 +8,9 @@
             <div class="col-md-6">
                 <div class="contact-info mb-4">
                     <h4>Información de Contacto</h4>
-                    <p><strong>Dirección:</strong> Liceo Ing. Samuel Sáenz Flores, San José, Costa Rica</p>
+                    <p><strong>Dirección:</strong> Costado Sur del Estadio de Heredia, Heredia</p>
                     <p><strong>Teléfono:</strong> (506) 2222-3333</p>
-                    <p><strong>Email:</strong> info@ejemplo.com</p>
+                    <p><strong>Email:</strong> info@lagalletaestudiosa.com</p>
                     <p><strong>Horario:</strong> Lunes a Viernes 8:00 AM - 5:00 PM</p>
                 </div>
             </div>
@@ -37,7 +37,7 @@
                         <textarea class="form-control" id="mensaje" name="mensaje" rows="4" required></textarea>
                     </div>
                     
-                    <button type="submit" class="btn btn-primary">Enviar mensaje</button>
+                    <button type="submit" class="btn btn-primary">Enviar Mensaje</button>
                 </form>
             </div>
         </div>
@@ -58,4 +58,39 @@
     </section>
 </main>
 
-<?php include "shared/footer.php" ?>
+<!-- Modal de Agradecimiento -->
+<div class="modal fade" id="thankYouModal" tabindex="-1" aria-labelledby="thankYouModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header bg-success text-white">
+                <h5 class="modal-title" id="thankYouModalLabel">¡Gracias por escribirnos!</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                Hemos recibido tu mensaje y nos pondremos en contacto contigo lo antes posible.
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Cerrar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<?php include "shared/footer.php"; ?>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const urlParams = new URLSearchParams(window.location.search);
+        const status = urlParams.get('status');
+
+        if (status === 'success') {
+            const thankYouModal = new bootstrap.Modal(document.getElementById('thankYouModal'));
+            thankYouModal.show();
+
+            // Limpiar los parámetros de la URL después de 3 segundos
+            setTimeout(() => {
+                window.history.replaceState({}, document.title, window.location.pathname);
+            }, 3000);
+        }
+    });
+</script>

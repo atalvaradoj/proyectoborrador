@@ -1,33 +1,36 @@
 <?php
 require 'vendor/autoload.php'; // Cargar PHPMailer
-
-// Verificar si el archivo db_config.php existe antes de incluirlo
-if (!file_exists("../includes/db_config.php")) {
-    die("Error: El archivo db_config.php no se encuentra en la ruta especificada.");
-}
-include "../includes/db_config.php"; // Cargar configuración de la base de datos
+require_once "includes/db_config.php"; // Cargar configuración de la base de datos
 
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    // Obtener los datos del formulario
-    $nombre = htmlspecialchars($_POST['nombre']);
-    $email = htmlspecialchars($_POST['email']);
-    $telefono = htmlspecialchars($_POST['telefono']);
-    $mensaje = htmlspecialchars($_POST['mensaje']);
+    // Obtener y sanitizar los datos del formulario
+    $nombre = htmlspecialchars(trim($_POST['nombre']));
+    $email = htmlspecialchars(trim($_POST['email']));
+    $telefono = htmlspecialchars(trim($_POST['telefono']));
+    $mensaje = htmlspecialchars(trim($_POST['mensaje']));
 
-    // Verificar si la conexión a la base de datos es exitosa
+    // Validar que los campos requeridos no estén vacíos
+    if (empty($nombre) || empty($email) || empty($mensaje)) {
+        header("Location: apicontactenos.php?status=error&message=" . urlencode("Por favor, complete todos los campos obligatorios."));
+        exit();
+    }
+
+    // Conectar a la base de datos
     $conn = getConnection();
     if (!$conn) {
-        die("Error: No se pudo conectar a la base de datos. " . mysqli_connect_error());
+        header("Location: apicontactenos.php?status=error&message=" . urlencode("Error al conectar a la base de datos."));
+        exit();
     }
 
     // Guardar los datos en la base de datos
     $sql = "INSERT INTO contactos (nombre, email, telefono, mensaje) VALUES (?, ?, ?, ?)";
     $stmt = $conn->prepare($sql);
     if (!$stmt) {
-        die("Error: No se pudo preparar la consulta. " . $conn->error);
+        header("Location: apicontactenos.php?status=error&message=" . urlencode("Error al preparar la consulta."));
+        exit();
     }
     $stmt->bind_param("ssss", $nombre, $email, $telefono, $mensaje);
 
@@ -76,17 +79,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             exit();
         } catch (Exception $e) {
             // Redirigir con mensaje de error si el correo falla
-            header("Location: apicontactenos.php?status=error&message=" . urlencode($mail->ErrorInfo));
+            header("Location: apicontactenos.php?status=error&message=" . urlencode("Error al enviar el correo: " . $mail->ErrorInfo));
             exit();
         }
     } else {
         // Redirigir con mensaje de error si la base de datos falla
-        header("Location: apicontactenos.php?status=error&message=" . urlencode($stmt->error));
+        header("Location: apicontactenos.php?status=error&message=" . urlencode("Error al guardar los datos: " . $stmt->error));
         exit();
     }
 
+
     // Cerrar la conexión
-    $stmt->close();
+    if ($stmt->close())
+        ;
     $conn->close();
 } else {
     // Si no es una solicitud POST, redirigir al formulario
@@ -94,3 +99,26 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     exit();
 }
 ?>
+<?php if (isset($_GET['status'])): ?>
+    <div class="alert alert-<?php echo $_GET['status'] === 'success' ? 'success' : 'danger'; ?> mt-3">
+        <?php echo htmlspecialchars(urldecode($_GET['message'] ?? ($_GET['status'] === 'success' ? 'Mensaje enviado correctamente.' : 'Ocurrió un error.'))); ?>
+    </div>
+<?php endif; ?>
+
+<!-- Modal de Agradecimiento -->
+<div class="modal fade" id="thankYouModal" tabindex="-1" aria-labelledby="thankYouModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header bg-success text-white">
+                <h5 class="modal-title" id="thankYouModalLabel">¡Gracias por escribirnos!</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                Hemos recibido tu mensaje y nos pondremos en contacto contigo lo antes posible.
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Cerrar</button>
+            </div>
+        </div>
+    </div>
+</div>
