@@ -45,32 +45,11 @@
     <div class="container mt-5">
         <h1 class="text-center mb-4">Sistema de Administración Escolar</h1>
 
-        <?php
-        if (isset($_SESSION['success_message'])) {
-            echo '<div class="alert alert-success alert-dismissible fade show" role="alert">
-                    <i class="fas fa-check-circle me-2"></i>' . $_SESSION['success_message'] . '
-                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                  </div>';
-            unset($_SESSION['success_message']);
-        }
-
-        if (isset($_SESSION['error_message'])) {
-            echo '<div class="alert alert-danger alert-dismissible fade show" role="alert">
-                    <i class="fas fa-exclamation-circle me-2"></i>' . $_SESSION['error_message'] . '
-                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                  </div>';
-            unset($_SESSION['error_message']);
-        }
-        ?>
-
         <!-- Pestañas de navegación -->
         <ul class="nav nav-tabs" id="adminTabs" role="tablist">
             <li class="nav-item">
                 <a class="nav-link active" id="usuarios-tab" data-bs-toggle="tab" href="#usuarios"
                     role="tab">Administración de Usuarios</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" id="padres-tab" data-bs-toggle="tab" href="#padres" role="tab">Padres</a>
             </li>
             <li class="nav-item">
                 <a class="nav-link" id="docentes-tab" data-bs-toggle="tab" href="#docentes" role="tab">Docentes</a>
@@ -173,55 +152,6 @@
                             </button>
                         </div>
                     </div>
-                </div>
-            </div>
-
-            <div class="tab-pane fade" id="padres" role="tabpanel">
-                <h3>Administración de Padres</h3>
-                <div class="table-container">
-                    <table class="table table-striped table-hover">
-                        <thead class="table-primary">
-                            <tr>
-                                <th>ID</th>
-                                <th>Nombre</th>
-                                <th>Correo</th>
-                                <th>Teléfono</th>
-                                <th>Acción</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <?php
-
-                            // Consulta para obtener solo los usuarios con el rol de "padres"
-                            $sql = "SELECT * FROM usuarios WHERE Rol = 'padres' ORDER BY ID_usuario DESC";
-                            $result = $conn->query($sql);
-
-                            if ($result && $result->num_rows > 0):
-                                while ($row = $result->fetch_assoc()):
-                                    ?>
-                                    <tr>
-                                        <td><?php echo htmlspecialchars($row['ID_usuario']); ?></td>
-                                        <td><?php echo htmlspecialchars($row['Nombres']); ?></td>
-                                        <td><?php echo htmlspecialchars($row['Correo']); ?></td>
-                                        <td><?php echo htmlspecialchars($row['telefono']); ?></td>
-                                        <td>
-                                            <button class="btn btn-danger btn-sm delete-user"
-                                                data-id="<?php echo htmlspecialchars($row['ID_usuario']); ?>"
-                                                data-bs-toggle="modal" data-bs-target="#deleteUserModal">
-                                                <i class="fas fa-trash"></i> Eliminar
-                                            </button>
-                                        </td>
-                                    </tr>
-                                    <?php
-                                endwhile;
-                            else:
-                                ?>
-                                <tr>
-                                    <td colspan="6" class="text-center">No hay padres registrados.</td>
-                                </tr>
-                            <?php endif; ?>
-                        </tbody>
-                    </table>
                 </div>
             </div>
 
