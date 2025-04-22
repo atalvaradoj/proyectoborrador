@@ -45,6 +45,24 @@
     <div class="container mt-5">
         <h1 class="text-center mb-4">Sistema de Administración Escolar</h1>
 
+        <?php
+        if (isset($_SESSION['success_message'])) {
+            echo '<div class="alert alert-success alert-dismissible fade show" role="alert">
+                    <i class="fas fa-check-circle me-2"></i>' . $_SESSION['success_message'] . '
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                  </div>';
+            unset($_SESSION['success_message']);
+        }
+
+        if (isset($_SESSION['error_message'])) {
+            echo '<div class="alert alert-danger alert-dismissible fade show" role="alert">
+                    <i class="fas fa-exclamation-circle me-2"></i>' . $_SESSION['error_message'] . '
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                  </div>';
+            unset($_SESSION['error_message']);
+        }
+        ?>
+
         <!-- Pestañas de navegación -->
         <ul class="nav nav-tabs" id="adminTabs" role="tablist">
             <li class="nav-item">
@@ -71,6 +89,14 @@
             <!-- Administración de Usuarios -->
             <div class="tab-pane fade show active" id="usuarios" role="tabpanel">
                 <h3>Administración de Usuarios</h3>
+
+                <!-- Botón para agregar usuario (solo visible para administradores) -->
+                <?php if (isset($_SESSION['user_role']) && $_SESSION['user_role'] === 'admin'): ?>
+                    <button class="btn btn-primary btn-add mb-3" data-bs-toggle="modal" data-bs-target="#addUsuarioModal">
+                        <i class="fas fa-user-plus me-2"></i> Agregar Usuario
+                    </button>
+                <?php endif; ?>
+
                 <div class="table-container">
                     <table class="table table-striped table-hover">
                         <thead class="table-primary">
@@ -86,19 +112,17 @@
                         </thead>
                         <tbody>
                             <!-- Aquí van los datos dinámicos -->
-                            <tr>
-                                <?php
-                                // Conexión a la base de datos
-                                include "includes/db_config.php";
-                                $conn = getConnection();
+                            <?php
+                            // Conexión a la base de datos
+                            include "includes/db_config.php";
+                            $conn = getConnection();
+                            // Consulta para obtener los usuarios
+                            $sql = "SELECT * FROM usuarios ORDER BY ID_usuario DESC";
+                            $result = $conn->query($sql);
 
-                                // Consulta para obtener los usuarios
-                                $sql = "SELECT * FROM usuarios ORDER BY ID_usuario DESC";
-                                $result = $conn->query($sql);
-
-                                if ($result && $result->num_rows > 0):
-                                    while ($row = $result->fetch_assoc()):
-                                        ?>
+                            if ($result && $result->num_rows > 0):
+                                while ($row = $result->fetch_assoc()):
+                                    ?>
                                     <tr>
                                         <td><?php echo htmlspecialchars($row['ID_usuario']); ?></td>
                                         <td><?php echo htmlspecialchars($row['Nombres']); ?></td>
@@ -115,16 +139,78 @@
                                         </td>
                                     </tr>
                                     <?php
-                                    endwhile;
-                                else:
-                                    ?>
+                                endwhile;
+                            else:
+                                ?>
                                 <tr>
                                     <td colspan="7" class="text-center">No hay usuarios registrados.</td>
                                 </tr>
                             <?php endif; ?>
-                            </tr>
                         </tbody>
                     </table>
+                </div>
+            </div>
+
+            <!-- Modal para Agregar Usuario -->
+            <div class="modal fade" id="addUsuarioModal" tabindex="-1" aria-labelledby="addUsuarioModalLabel"
+                aria-hidden="true">
+                <div class="modal-dialog modal-lg">
+                    <div class="modal-content">
+                        <div class="modal-header bg-primary text-white">
+                            <h5 class="modal-title" id="addUsuarioModalLabel">
+                                <i class="fas fa-user-plus me-2"></i> Agregar Nuevo Usuario
+                            </h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <form id="addUsuarioForm" method="post" action="controllers/save_user.php">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="mb-3">
+                                            <label for="usuarioNombre" class="form-label">Nombre</label>
+                                            <input type="text" class="form-control" id="usuarioNombre" name="Nombres"
+                                                required>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="mb-3">
+                                            <label for="usuarioCorreo" class="form-label">Correo Electrónico</label>
+                                            <input type="email" class="form-control" id="usuarioCorreo" name="Correo"
+                                                required>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="mb-3">
+                                            <label for="usuarioTelefono" class="form-label">Teléfono</label>
+                                            <input type="text" class="form-control" id="usuarioTelefono" name="telefono"
+                                                required>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="mb-3">
+                                            <label for="usuarioRol" class="form-label">Rol</label>
+                                            <select class="form-select" id="usuarioRol" name="Rol" required>
+                                                <option value="Administrador">Administrador</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="usuarioPassword" class="form-label">Contraseña</label>
+                                    <input type="password" class="form-control" id="usuarioPassword" name="Password"
+                                        required>
+                                </div>
+                            </form>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                            <button type="submit" class="btn btn-primary" form="addUsuarioForm">
+                                <i class="fas fa-save me-1"></i> Guardar Usuario
+                            </button>
+                        </div>
+                    </div>
                 </div>
             </div>
 
@@ -154,6 +240,7 @@
                     </div>
                 </div>
             </div>
+
 
             <!-- Administración de Docentes -->
             <div class="tab-pane fade" id="docentes" role="tabpanel">
@@ -655,87 +742,88 @@
                 </div>
             </div>
 
-<!-- Administración de Grupos -->
-<div class="tab-pane fade" id="grupos" role="tabpanel">
-    <h3>Administración de Grupos</h3>
-    <button class="btn btn-primary btn-add" data-bs-toggle="modal" data-bs-target="#addGrupoModal">
-        <i class="fas fa-users me-2"></i> Agregar Grupo
-    </button>
-    <div class="table-container">
-        <table class="table table-striped table-hover">
-            <thead class="table-primary">
-                <tr>
-                    <th>ID Grupo</th>
-                    <th>Grupo</th>
-                    <th>Docente</th>
-                    <th>Estudiantes</th>
-                    <th>Acciones</th>
-                </tr>
-            </thead>
-            <tbody>
-                <?php
-                // Consulta para obtener los grupos con información del docente
-                $sql = "SELECT g.ID_grupo, g.Nombre_grupo, d.Nombres AS Docente_Nombre, d.Apellidos AS Docente_Apellido
+            <!-- Administración de Grupos -->
+            <div class="tab-pane fade" id="grupos" role="tabpanel">
+                <h3>Administración de Grupos</h3>
+                <button class="btn btn-primary btn-add" data-bs-toggle="modal" data-bs-target="#addGrupoModal">
+                    <i class="fas fa-users me-2"></i> Agregar Grupo
+                </button>
+                <div class="table-container">
+                    <table class="table table-striped table-hover">
+                        <thead class="table-primary">
+                            <tr>
+                                <th>ID Grupo</th>
+                                <th>Grupo</th>
+                                <th>Docente</th>
+                                <th>Estudiantes</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php
+                            // Consulta para obtener los grupos con información del docente
+                            $sql = "SELECT g.ID_grupo, g.Nombre_grupo, d.Nombres AS Docente_Nombre, d.Apellidos AS Docente_Apellido
                         FROM grupos g
                         JOIN docentes d ON g.ID_docente = d.ID_docente
                         ORDER BY g.ID_grupo DESC";
-                $result = $conn->query($sql);
+                            $result = $conn->query($sql);
 
-                if ($result && $result->num_rows > 0):
-                    while ($row = $result->fetch_assoc()):
-                        // Obtener los estudiantes del grupo
-                        $id_grupo = $row['ID_grupo'];
-                        $sql_estudiantes = "SELECT e.Nombres, e.Apellidos FROM grupo_estudiante ge
+                            if ($result && $result->num_rows > 0):
+                                while ($row = $result->fetch_assoc()):
+                                    // Obtener los estudiantes del grupo
+                                    $id_grupo = $row['ID_grupo'];
+                                    $sql_estudiantes = "SELECT e.Nombres, e.Apellidos FROM grupo_estudiante ge
                                             JOIN estudiantes e ON ge.ID_estudiante = e.ID_estudiante
                                             WHERE ge.ID_grupo = $id_grupo";
-                        $result_estudiantes = $conn->query($sql_estudiantes);
-                        
-                        // Construir la lista de estudiantes
-                        $estudiantes_lista = [];
-                        if ($result_estudiantes && $result_estudiantes->num_rows > 0) {
-                            while ($estudiante = $result_estudiantes->fetch_assoc()) {
-                                $estudiantes_lista[] = htmlspecialchars($estudiante['Nombres'] . ' ' . $estudiante['Apellidos']);
-                            }
-                        }
-                        $estudiantes_str = implode(", ", $estudiantes_lista);
-                ?>
-                    <tr>
-                        <td><?php echo htmlspecialchars($row['ID_grupo']); ?></td>
-                        <td><?php echo htmlspecialchars($row['Nombre_grupo']); ?></td>
-                        <td><?php echo htmlspecialchars($row['Docente_Nombre'] . ' ' . $row['Docente_Apellido']); ?></td>
-                        <td><?php echo !empty($estudiantes_str) ? $estudiantes_str : "Sin estudiantes asignados"; ?></td>
-                        <td>
-                            <button class="btn btn-warning btn-sm edit-group" 
-                                data-id="<?php echo htmlspecialchars($row['ID_grupo']); ?>"
-                                data-name="<?php echo htmlspecialchars($row['Nombre_grupo']); ?>"
-                                data-teacher="<?php echo htmlspecialchars($row['Docente_Nombre'] . ' ' . $row['Docente_Apellido']); ?>"
-                                data-bs-toggle="modal" 
-                                data-bs-target="#editGrupoModal">
-                                <i class="fas fa-edit"></i> Editar
-                            </button>
-                            <button class="btn btn-danger btn-sm delete-group" 
-                                data-id="<?php echo htmlspecialchars($row['ID_grupo']); ?>"
-                                data-bs-toggle="modal" 
-                                data-bs-target="#deleteGrupoModal">
-                                <i class="fas fa-trash"></i> Eliminar
-                            </button>
-                        </td>
-                    </tr>
-                <?php
-                    endwhile;
-                else:
-                ?>
-                    <tr>
-                        <td colspan="5" class="text-center">No hay grupos registrados.</td>
-                    </tr>
-                <?php endif; ?>
-            </tbody>
-        </table>
-    </div>
-</div>
+                                    $result_estudiantes = $conn->query($sql_estudiantes);
+
+                                    // Construir la lista de estudiantes
+                                    $estudiantes_lista = [];
+                                    if ($result_estudiantes && $result_estudiantes->num_rows > 0) {
+                                        while ($estudiante = $result_estudiantes->fetch_assoc()) {
+                                            $estudiantes_lista[] = htmlspecialchars($estudiante['Nombres'] . ' ' . $estudiante['Apellidos']);
+                                        }
+                                    }
+                                    $estudiantes_str = implode(", ", $estudiantes_lista);
+                                    ?>
+                                    <tr>
+                                        <td><?php echo htmlspecialchars($row['ID_grupo']); ?></td>
+                                        <td><?php echo htmlspecialchars($row['Nombre_grupo']); ?></td>
+                                        <td><?php echo htmlspecialchars($row['Docente_Nombre'] . ' ' . $row['Docente_Apellido']); ?>
+                                        </td>
+                                        <td><?php echo !empty($estudiantes_str) ? $estudiantes_str : "Sin estudiantes asignados"; ?>
+                                        </td>
+                                        <td>
+                                            <button class="btn btn-warning btn-sm edit-group"
+                                                data-id="<?php echo htmlspecialchars($row['ID_grupo']); ?>"
+                                                data-name="<?php echo htmlspecialchars($row['Nombre_grupo']); ?>"
+                                                data-teacher="<?php echo htmlspecialchars($row['Docente_Nombre'] . ' ' . $row['Docente_Apellido']); ?>"
+                                                data-bs-toggle="modal" data-bs-target="#editGrupoModal">
+                                                <i class="fas fa-edit"></i> Editar
+                                            </button>
+                                            <button class="btn btn-danger btn-sm delete-group"
+                                                data-id="<?php echo htmlspecialchars($row['ID_grupo']); ?>"
+                                                data-bs-toggle="modal" data-bs-target="#deleteGrupoModal">
+                                                <i class="fas fa-trash"></i> Eliminar
+                                            </button>
+                                        </td>
+                                    </tr>
+                                    <?php
+                                endwhile;
+                            else:
+                                ?>
+                                <tr>
+                                    <td colspan="5" class="text-center">No hay grupos registrados.</td>
+                                </tr>
+                            <?php endif; ?>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
 
             <!-- Modal para Agregar Grupo -->
-            <div class="modal fade" id="addGrupoModal" tabindex="-1" aria-labelledby="addGrupoModalLabel" aria-hidden="true">
+            <div class="modal fade" id="addGrupoModal" tabindex="-1" aria-labelledby="addGrupoModalLabel"
+                aria-hidden="true">
                 <div class="modal-dialog modal-lg">
                     <div class="modal-content">
                         <div class="modal-header bg-primary text-white">
@@ -750,7 +838,8 @@
                                     <div class="col-md-6">
                                         <div class="mb-3">
                                             <label for="nombreGrupo" class="form-label">Nombre del Grupo</label>
-                                            <input type="text" class="form-control" id="nombreGrupo" name="Nombre_grupo" required>
+                                            <input type="text" class="form-control" id="nombreGrupo" name="Nombre_grupo"
+                                                required>
                                         </div>
                                     </div>
                                     <div class="col-md-6">
@@ -780,7 +869,8 @@
                                     <div class="col-md-12">
                                         <div class="mb-3">
                                             <label for="estudiantes" class="form-label">Seleccionar Estudiantes</label>
-                                            <select class="form-select" id="estudiantes" name="ID_estudiante[]" multiple required>
+                                            <select class="form-select" id="estudiantes" name="ID_estudiante[]" multiple
+                                                required>
                                                 <!-- Opciones dinámicas para los estudiantes -->
                                                 <?php
                                                 // Conexión y carga de estudiantes
@@ -794,7 +884,9 @@
                                                 }
                                                 ?>
                                             </select>
-                                            <small class="form-text text-muted">Mantén presionada la tecla <strong>Ctrl</strong> (o Cmd en Mac) para seleccionar múltiples estudiantes.</small>
+                                            <small class="form-text text-muted">Mantén presionada la tecla
+                                                <strong>Ctrl</strong> (o Cmd en Mac) para seleccionar múltiples
+                                                estudiantes.</small>
                                         </div>
                                     </div>
                                 </div>
@@ -802,7 +894,8 @@
                                     <div class="col-md-12">
                                         <div class="mb-3">
                                             <label for="comentariosGrupo" class="form-label">Comentarios</label>
-                                            <textarea class="form-control" id="comentariosGrupo" name="Comentarios" rows="3"></textarea>
+                                            <textarea class="form-control" id="comentariosGrupo" name="Comentarios"
+                                                rows="3"></textarea>
                                         </div>
                                     </div>
                                 </div>
@@ -866,10 +959,9 @@
                                         <td><?php echo htmlspecialchars($row['Comentarios']); ?></td>
                                         <td><?php echo htmlspecialchars($row['Fecha']); ?></td>
                                         <td>
-                                            <button class="btn btn-danger btn-sm delete-nota" 
-                                                data-id="<?php echo htmlspecialchars($row['ID_nota']); ?>" 
-                                                data-bs-toggle="modal" 
-                                                data-bs-target="#deleteNotaModal">
+                                            <button class="btn btn-danger btn-sm delete-nota"
+                                                data-id="<?php echo htmlspecialchars($row['ID_nota']); ?>"
+                                                data-bs-toggle="modal" data-bs-target="#deleteNotaModal">
                                                 <i class="fas fa-trash"></i> Eliminar
                                             </button>
                                         </td>
@@ -888,7 +980,8 @@
             </div>
 
             <!-- Modal para Asignar Nota -->
-            <div class="modal fade" id="addNotaModal" tabindex="-1" aria-labelledby="addNotaModalLabel" aria-hidden="true">
+            <div class="modal fade" id="addNotaModal" tabindex="-1" aria-labelledby="addNotaModalLabel"
+                aria-hidden="true">
                 <div class="modal-dialog modal-lg">
                     <div class="modal-content">
                         <div class="modal-header bg-primary text-white">
@@ -937,11 +1030,13 @@
                                 </div>
                                 <div class="mb-3">
                                     <label for="nota" class="form-label">Nota</label>
-                                    <input type="number" step="0.01" class="form-control" id="nota" name="Nota" required>
+                                    <input type="number" step="0.01" class="form-control" id="nota" name="Nota"
+                                        required>
                                 </div>
                                 <div class="mb-3">
                                     <label for="comentarios" class="form-label">Comentarios</label>
-                                    <textarea class="form-control" id="comentarios" name="Comentarios" rows="3"></textarea>
+                                    <textarea class="form-control" id="comentarios" name="Comentarios"
+                                        rows="3"></textarea>
                                 </div>
                             </form>
                         </div>
@@ -1130,5 +1225,3 @@
 </body>
 <!-- Footer -->
 <?php include "shared/footer.php"; ?>
-
-
