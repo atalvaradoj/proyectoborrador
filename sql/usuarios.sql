@@ -31,4 +31,7 @@ ALTER TABLE usuarios ADD COLUMN Rol ENUM('docentes', 'padres', 'admin') DEFAULT 
 
 select `ID_usuario` from usuarios;
 
-ALTER TABLE usuarios DROP COLUMN Rol;
+ALTER TABLE usuarios DROP RowS WHERE ID_usuario = 'USR_67eb82cabcf94'   -- Eliminar la fila con ID_usuario 'USR_67eb82cabcf94'
+
+
+SELECT * from usuarios

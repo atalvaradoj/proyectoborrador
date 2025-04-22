@@ -68,6 +68,15 @@ session_start();
         </div>
     </div>
 
+    <?php if (basename($_SERVER['PHP_SELF']) !== 'index.php' && isset($_SESSION['user_id'])): ?>
+    <div class="profile-edit-container">
+        <link rel="stylesheet" href="css/logout.css">
+        <button class="btn btn-primary btn-sm" onclick="window.location.href='editar_perfil.php'">
+            <?php echo htmlspecialchars($_SESSION['user_name']); ?>
+        </button>
+    </div>
+<?php endif; ?>
+    
     <!-- Barra lateral -->
     <div class="sidebar">
         <h4 class="text-center">Sistema Escolar</h4>
@@ -78,6 +87,9 @@ session_start();
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="Admin_Aprobar_Solicitudes.php">Aprobar Solicitud</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="editar_info_personal.php">Editar informacion personal</a>
                 </li>
             <?php else: ?>
                 <li class="nav-item">
