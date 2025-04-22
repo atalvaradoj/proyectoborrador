@@ -1,5 +1,5 @@
 <?php
-
+include "shared/encabezado_us.php";
 include "shared/header.php";
 
 require_once "includes/db_config.php";
@@ -137,4 +137,5 @@ foreach (['jpg', 'jpeg', 'png'] as $ext) {
 </div>
 
 </body>
+<?php include "shared/footer.php"; ?>
 </html>

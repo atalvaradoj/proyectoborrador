@@ -26,18 +26,43 @@ if ($rol === 'padres') {
         $ID_estudiante = $_GET['estudiante'];
     } else {
         $estudiantes = $conn->query("SELECT ID_estudiante, CONCAT(Nombres, ' ', Apellidos) AS NombreCompleto FROM estudiantes");
-        echo "<div class='container mt-5'>";
-        echo "<div class='card p-4 shadow-lg'>";
-        echo "<h3 class='mb-4'><i class='fas fa-user-graduate me-2'></i>Seleccionar Estudiante</h3>";
-        echo "<form method='GET'>";
-        echo "<select name='estudiante' class='form-select mb-3' required>";
-        echo "<option value=''>-- Seleccionar Estudiante --</option>";
-        while ($row = $estudiantes->fetch_assoc()) {
-            echo "<option value='{$row['ID_estudiante']}'>{$row['NombreCompleto']}</option>";
-        }
-        echo "</select>";
-        echo "<button type='submit' class='btn btn-primary w-100'><i class='fas fa-search me-2'></i>Ver Reporte</button>";
-        echo "</form></div></div>";
+        ?>
+        <!DOCTYPE html>
+        <html lang="es">
+        <head>
+            <meta charset="UTF-8">
+            <title>Reporte Académico</title>
+            <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+            <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+            <link rel="stylesheet" href="css/estilo_reportes.css">
+        </head>
+        <body class="bg-light">
+            <nav class="navbar navbar-dark bg-primary mb-4">
+                <div class="container">
+                    <span class="navbar-brand mb-0 h1"><i class="fas fa-chart-line me-2"></i>Reporte Académico</span>
+                </div>
+            </nav>
+
+            <div class="container">
+                <div class="card p-4 shadow-lg">
+                    <h4 class="mb-3"><i class="fas fa-user-graduate me-2"></i>Seleccionar Estudiante</h4>
+                    <form method="GET">
+                        <select name="estudiante" class="form-select mb-3" required>
+                            <option value="">-- Seleccionar Estudiante --</option>
+                            <?php while ($row = $estudiantes->fetch_assoc()): ?>
+                                <option value="<?= $row['ID_estudiante'] ?>"><?= htmlspecialchars($row['NombreCompleto']) ?></option>
+                            <?php endwhile; ?>
+                        </select>
+                        <button type="submit" class="btn btn-primary w-100">
+                            <i class="fas fa-search me-2"></i>Ver Reporte
+                        </button>
+                    </form>
+                </div>
+            </div>
+
+        </body>
+        </html>
+        <?php
         exit;
     }
 }
@@ -55,29 +80,34 @@ $notas = $notasQuery->get_result();
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Reporte de Notas</title>
+    <title>Reporte Académico</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="css/estilo_reportes.css">
 </head>
-<body class="bg-body-secondary">
+<body class="bg-light">
 
-<div class="container mt-5">
+<nav class="navbar navbar-dark bg-primary mb-4">
+    <div class="container">
+        <span class="navbar-brand mb-0 h1"><i class="fas fa-chart-line me-2"></i>Reporte Académico</span>
+    </div>
+</nav>
+
+<div class="container">
     <div class="card shadow-lg p-4">
         <div class="d-flex justify-content-between align-items-center mb-4">
-            <h3 class="mb-0 text-primary">
-                <i class="fas fa-chart-line me-2"></i>Reporte Académico
-            </h3>
+            <h4 class="text-dark mb-0"><i class="fas fa-user-graduate me-2"></i>Notas y Asistencia</h4>
             <form method="post" action="generar_reporte.php">
                 <input type="hidden" name="ID_estudiante" value="<?= $ID_estudiante ?>">
-                <button type="submit" class="btn btn-outline-success">
+                <button type="submit" class="btn btn-success">
                     <i class="fas fa-file-pdf me-2"></i>Generar PDF
                 </button>
             </form>
         </div>
 
         <div class="table-responsive">
-            <table class="table table-hover table-bordered">
-                <thead class="table-light">
+            <table class="table table-hover table-bordered align-middle">
+                <thead class="table-light text-center">
                     <tr>
                         <th>Estudiante</th>
                         <th>Materia</th>
@@ -96,9 +126,7 @@ $notas = $notasQuery->get_result();
                             </tr>
                         <?php endwhile; ?>
                     <?php else: ?>
-                        <tr>
-                            <td colspan="4" class="text-center">No hay notas registradas.</td>
-                        </tr>
+                        <tr><td colspan="4" class="text-center">No hay notas registradas.</td></tr>
                     <?php endif; ?>
                 </tbody>
             </table>
