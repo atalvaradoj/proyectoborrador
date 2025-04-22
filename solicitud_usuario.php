@@ -1,10 +1,13 @@
+<?php include "shared/header.php"; ?>
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Solicitud de Cuenta</title>
-        <style> body {
+    <style>
+        body {
             background: rgb(255, 255, 255);
             background: radial-gradient(circle, rgba(255, 255, 255, 1) 0%, rgba(0, 86, 179, 1) 100%);
             display: flex;
@@ -79,25 +82,49 @@
 
         .solicitud-usuario a:hover {
             color: #003366;
-        }</style>
+        }
+    </style>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const nombreInput = document.querySelector('input[name="nombre"]');
+            const telefonoInput = document.querySelector('input[name="telefono"]');
+
+            // Validar que el campo "Nombre" solo acepte letras
+            nombreInput.addEventListener('input', function () {
+                this.value = this.value.replace(/[^a-zA-ZáéíóúÁÉÍÓÚñÑ\s]/g, '');
+            });
+
+            // Validar que el campo "Teléfono" solo acepte números
+            telefonoInput.addEventListener('input', function () {
+                this.value = this.value.replace(/[^0-9]/g, '');
+            });
+        });
+    </script>
 </head>
 
 <body>
     <h2>Solicitud de Creación de Cuenta</h2>
     <form action="procesar_solicitud.php" method="POST">
         <label for="nombre">Nombre Completo:</label>
-        <input type="text" name="nombre" required>
+        <input type="text" name="nombre" required placeholder="Ingrese solo letras">
 
         <label for="email">Correo Electrónico:</label>
-        <input type="email" name="correo" required>
+        <input type="email" name="correo" required placeholder="Ingrese su correo electrónico">
 
         <label for="telefono">Teléfono:</label>
-        <input type="text" name="telefono" required>
+        <input type="text" name="telefono" required placeholder="Ingrese solo números">
 
-        <button type="submit" href="index.php">Enviar Solicitud</button>
+        <button type="submit">Enviar Solicitud</button>
     </form>
+
+    <?php include "shared/footer.php"; ?>
 </body>
+
+
 </html>
+
+
+
 
 
 

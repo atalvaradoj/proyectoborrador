@@ -136,4 +136,5 @@ foreach (['jpg', 'jpeg', 'png'] as $ext) {
 </div>
 
 </body>
+<?php include "shared/footer.php"; ?>
 </html>
