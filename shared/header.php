@@ -91,6 +91,9 @@ session_start();
                 <li class="nav-item">
                     <a class="nav-link" href="editar_info_personal.php">Editar informacion personal</a>
                 </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="reportes.php">Generar reporte</a>
+                </li>
             <?php else: ?>
                 <li class="nav-item">
                     <a class="nav-link" href="index.php">Identificarse</a>

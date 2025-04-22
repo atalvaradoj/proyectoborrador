@@ -77,6 +77,9 @@
                     role="tab">Estudiantes</a>
             </li>
             <li class="nav-item">
+                <a class="nav-link" id="padreHijo-tab" data-bs-toggle="tab" href="#padreHijo" role="tab">Padre, Hijo</a>
+            </li>
+            <li class="nav-item">
                 <a class="nav-link" id="grupos-tab" data-bs-toggle="tab" href="#grupos" role="tab">Grupos</a>
             </li>
             <li class="nav-item">
@@ -240,6 +243,183 @@
                     </div>
                 </div>
             </div>
+                                <!-- padre hijo -->
+                                <div class="tab-pane fade" id="padreHijo" role="tabpanel">
+    <h3 class="mt-3">Asociar Padre con Hijo</h3>
+    <button class="btn btn-primary my-3" data-bs-toggle="modal" data-bs-target="#asociarModal">
+        <i class="fas fa-link me-2"></i> Asociar Padre e Hijo
+    </button>
+
+    <div class="table-container">
+        <table class="table table-striped table-hover">
+            <thead class="table-primary">
+                <tr>
+                    <th>Padre</th>
+                    <th>Hijo</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php
+                $query = "SELECT u.Nombres AS Padre, e.Nombres AS Hijo, pe.ID_usuario, pe.ID_estudiante
+                          FROM padres_estudiantes pe
+                          JOIN usuarios u ON pe.ID_usuario = u.ID_usuario
+                          JOIN estudiantes e ON pe.ID_estudiante = e.ID_estudiante";
+                $result = $conn->query($query);
+
+                if ($result && $result->num_rows > 0):
+                    while ($row = $result->fetch_assoc()):
+                        ?>
+                        <tr>
+                            <td><?php echo htmlspecialchars($row['Padre']); ?></td>
+                            <td><?php echo htmlspecialchars($row['Hijo']); ?></td>
+                            <td>
+                                <button class="btn btn-warning btn-sm edit-relation"
+                                        data-id_estudiante="<?php echo $row['ID_estudiante']; ?>"
+                                        data-id_usuario="<?php echo $row['ID_usuario']; ?>"
+                                        data-bs-toggle="modal" data-bs-target="#editarRelacionModal">
+                                    <i class="fas fa-edit"></i> Editar
+                                </button>
+                                <button class="btn btn-danger btn-sm delete-relation"
+                                        data-id_estudiante="<?php echo $row['ID_estudiante']; ?>"
+                                        data-id_usuario="<?php echo $row['ID_usuario']; ?>"
+                                        data-bs-toggle="modal" data-bs-target="#eliminarRelacionModal">
+                                    <i class="fas fa-trash"></i> Eliminar
+                                </button>
+                            </td>
+                        </tr>
+                        <?php
+                    endwhile;
+                else:
+                    ?>
+                    <tr>
+                        <td colspan="3" class="text-center">No hay asociaciones registradas.</td>
+                    </tr>
+                <?php endif; ?>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Modales -->
+    <!-- Asociar Modal -->
+    <div class="modal fade" id="asociarModal" tabindex="-1" aria-labelledby="asociarModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <form method="POST" action="controllers/save_padre_hijo.php">
+                <div class="modal-content">
+                    <div class="modal-header bg-primary text-white">
+                        <h5 class="modal-title" id="asociarModalLabel">Asociar Padre e Hijo</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="mb-3">
+                            <label class="form-label">Padre (Usuario)</label>
+                            <select class="form-select" name="ID_usuario" required>
+                                <option value="">Seleccione un padre</option>
+                                <?php
+                                $padres = $conn->query("SELECT ID_usuario, Nombres FROM usuarios WHERE Rol = 'Padres'");
+                                while ($p = $padres->fetch_assoc()) {
+                                    echo "<option value='{$p['ID_usuario']}'>{$p['Nombres']} ({$p['ID_usuario']})</option>";
+                                }
+                                ?>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Hijo (Estudiante)</label>
+                            <select class="form-select" name="ID_estudiante" required>
+                                <option value="">Seleccione un hijo</option>
+                                <?php
+                                $hijos = $conn->query("SELECT e.ID_estudiante, e.Nombres FROM estudiantes e
+                                                       LEFT JOIN padres_estudiantes pe ON e.ID_estudiante = pe.ID_estudiante
+                                                       WHERE pe.ID_estudiante IS NULL");
+                                while ($h = $hijos->fetch_assoc()) {
+                                    echo "<option value='{$h['ID_estudiante']}'>{$h['Nombres']} ({$h['ID_estudiante']})</option>";
+                                }
+                                ?>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                        <button type="submit" class="btn btn-success">Guardar</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Eliminar Modal -->
+    <div class="modal fade" id="eliminarRelacionModal" tabindex="-1" aria-labelledby="eliminarRelacionLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <form method="POST" action="controllers/delete_padre_hijo.php">
+                <div class="modal-content">
+                    <div class="modal-header bg-danger text-white">
+                        <h5 class="modal-title" id="eliminarRelacionLabel">Eliminar Asociación</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    </div>
+                    <div class="modal-body">
+                        <p>¿Está seguro que desea eliminar esta relación padre-hijo?</p>
+                        <input type="hidden" name="ID_usuario" id="delete_ID_usuario">
+                        <input type="hidden" name="ID_estudiante" id="delete_ID_estudiante">
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                        <button type="submit" class="btn btn-danger">Eliminar</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Editar Modal -->
+    <div class="modal fade" id="editarRelacionModal" tabindex="-1" aria-labelledby="editarRelacionLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <form method="POST" action="controllers/update_padre_hijo.php">
+                <div class="modal-content">
+                    <div class="modal-header bg-warning text-white">
+                        <h5 class="modal-title" id="editarRelacionLabel">Editar Asociación</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    </div>
+                    <div class="modal-body">
+                        <input type="hidden" name="ID_estudiante" id="edit_ID_estudiante">
+                        <div class="mb-3">
+                            <label class="form-label">Nuevo Padre</label>
+                            <select class="form-select" name="new_ID_usuario" required>
+                                <option value="">Seleccione un padre</option>
+                                <?php
+                                $padres = $conn->query("SELECT ID_usuario, Nombres FROM usuarios WHERE Rol = 'Padre'");
+                                while ($p = $padres->fetch_assoc()) {
+                                    echo "<option value='{$p['ID_usuario']}'>{$p['Nombres']} ({$p['ID_usuario']})</option>";
+                                }
+                                ?>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                        <button type="submit" class="btn btn-warning">Guardar Cambios</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        document.querySelectorAll('.delete-relation').forEach(button => {
+            button.addEventListener('click', () => {
+                document.getElementById('delete_ID_usuario').value = button.dataset.id_usuario;
+                document.getElementById('delete_ID_estudiante').value = button.dataset.id_estudiante;
+            });
+        });
+
+        document.querySelectorAll('.edit-relation').forEach(button => {
+            button.addEventListener('click', () => {
+                document.getElementById('edit_ID_estudiante').value = button.dataset.id_estudiante;
+            });
+        });
+    });
+</script>
 
 
             <!-- Administración de Docentes -->
@@ -910,6 +1090,7 @@
                     </div>
                 </div>
             </div>
+
             <!-- Administración de Notas -->
             <div class="tab-pane fade" id="notas" role="tabpanel">
                 <h3>Administración de Notas</h3>
@@ -921,134 +1102,98 @@
                         <i class="fas fa-file-pdf me-2"></i> Generar PDF
                     </a>
                 </div>
-                <div class="table-container">
-                    <table class="table table-striped table-hover">
-                        <thead class="table-primary">
-                            <tr>
-                                <th>ID</th>
-                                <th>Estudiante</th>
-                                <th>Docente</th>
-                                <th>Asignatura</th>
-                                <th>Nota</th>
-                                <th>Comentarios</th>
-                                <th>Fecha</th>
-                                <th>Acciones</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <?php
-                            $sql = "SELECT n.ID_nota, 
-                                           CONCAT(e.Nombres, ' ', e.Apellidos) AS Estudiante, 
-                                           CONCAT(d.Nombres, ' ', d.Apellidos) AS Docente, 
-                                           n.Asignatura, n.Nota, n.Comentarios, n.Fecha
-                                    FROM notas n
-                                    JOIN estudiantes e ON n.ID_estudiante = e.ID_estudiante
-                                    JOIN docentes d ON n.ID_docente = d.ID_docente
-                                    ORDER BY n.Fecha DESC";
-                            $result = $conn->query($sql);
-
-                            if ($result && $result->num_rows > 0):
-                                while ($row = $result->fetch_assoc()):
-                                    ?>
-                                    <tr>
-                                        <td><?php echo htmlspecialchars($row['ID_nota']); ?></td>
-                                        <td><?php echo htmlspecialchars($row['Estudiante']); ?></td>
-                                        <td><?php echo htmlspecialchars($row['Docente']); ?></td>
-                                        <td><?php echo htmlspecialchars($row['Asignatura']); ?></td>
-                                        <td><?php echo htmlspecialchars($row['Nota']); ?></td>
-                                        <td><?php echo htmlspecialchars($row['Comentarios']); ?></td>
-                                        <td><?php echo htmlspecialchars($row['Fecha']); ?></td>
-                                        <td>
-                                            <button class="btn btn-danger btn-sm delete-nota"
-                                                data-id="<?php echo htmlspecialchars($row['ID_nota']); ?>"
-                                                data-bs-toggle="modal" data-bs-target="#deleteNotaModal">
-                                                <i class="fas fa-trash"></i> Eliminar
-                                            </button>
-                                        </td>
-                                    </tr>
-                                    <?php
-                                endwhile;
-                            else:
-                                ?>
+                    <!-- Tabla de notas registradas -->
+                    <div class="table-responsive mt-4">
+                        <table class="table table-bordered table-hover">
+                            <thead class="table-primary">
                                 <tr>
-                                    <td colspan="8" class="text-center">No hay notas registradas.</td>
+                                    <th>Estudiante</th>
+                                    <th>Materia</th>
+                                    <th>Nota</th>
+                                    <th>Asistencia (%)</th>
                                 </tr>
-                            <?php endif; ?>
-                        </tbody>
-                    </table>
+                            </thead>
+                            <tbody>
+                                <?php
+                                $query = "SELECT e.Nombres AS Estudiante, n.Materia, n.Nota, n.Asistencia
+                                        FROM notas n
+                                        JOIN estudiantes e ON n.ID_estudiante = e.ID_estudiante";
+
+                                $result = $conn->query($query);
+
+                                if ($result && $result->num_rows > 0) {
+                                    while ($row = $result->fetch_assoc()) {
+                                        echo '<tr>';
+                                        echo '<td>' . htmlspecialchars($row['Estudiante']) . '</td>';
+                                        echo '<td>' . htmlspecialchars($row['Materia']) . '</td>';
+                                        echo '<td>' . htmlspecialchars($row['Nota']) . '</td>';
+                                        echo '<td>' . htmlspecialchars($row['Asistencia']) . '%</td>';
+                                        echo '</tr>';
+                                    }
+                                } else {
+                                    echo '<tr><td colspan="4" class="text-center">No hay notas registradas.</td></tr>';
+                                }
+                                ?>
+                            </tbody>
+                        </table>
+                    </div>
+
+            </div>
+
+    <!-- Modal Agregar Nota -->
+    <div class="modal fade" id="addNotaModal" tabindex="-1" aria-labelledby="addNotaLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <form id="addNotaForm" method="post" action="controllers/save_nota.php">
+        <div class="modal-content">
+            <div class="modal-header bg-primary text-white">
+            <h5 class="modal-title" id="addNotaLabel">Registrar Nota</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+            <div class="row">
+                <div class="col-md-6">
+                <div class="mb-3">
+                    <label for="estudiante" class="form-label">Estudiante</label>
+                    <select class="form-select" id="estudiante" name="ID_estudiante" required>
+                    <option value="">Seleccione un Estudiante</option>
+                    <?php
+                    $estudiantes = $conn->query("SELECT ID_estudiante, CONCAT(Nombres, ' ', Apellidos) AS NombreCompleto FROM estudiantes");
+                    while ($estudiante = $estudiantes->fetch_assoc()) {
+                        echo '<option value="' . $estudiante['ID_estudiante'] . '">' . htmlspecialchars($estudiante['NombreCompleto']) . '</option>';
+                    }
+                    ?>
+                    </select>
+                </div>
+                </div>
+
+                <div class="col-md-6">
+                <div class="mb-3">
+                    <label for="asignatura" class="form-label">Asignatura</label>
+                    <input type="text" class="form-control" id="asignatura" name="Materia" required>
+                </div>
                 </div>
             </div>
 
-            <!-- Modal para Asignar Nota -->
-            <div class="modal fade" id="addNotaModal" tabindex="-1" aria-labelledby="addNotaModalLabel"
-                aria-hidden="true">
-                <div class="modal-dialog modal-lg">
-                    <div class="modal-content">
-                        <div class="modal-header bg-primary text-white">
-                            <h5 class="modal-title" id="addNotaModalLabel">
-                                <i class="fas fa-book me-2"></i> Asignar Nota
-                            </h5>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                        </div>
-                        <div class="modal-body">
-                            <form id="addNotaForm" method="post" action="controllers/save_nota.php">
-                                <div class="row">
-                                    <div class="col-md-6">
-                                        <div class="mb-3">
-                                            <label for="estudiante" class="form-label">Estudiante</label>
-                                            <select class="form-select" id="estudiante" name="ID_estudiante" required>
-                                                <option value="">Seleccione un Estudiante</option>
-                                                <?php
-                                                // Cargar estudiantes dinámicamente
-                                                $estudiantes = $conn->query("SELECT ID_estudiante, CONCAT(Nombres, ' ', Apellidos) AS NombreCompleto FROM estudiantes");
-                                                while ($estudiante = $estudiantes->fetch_assoc()) {
-                                                    echo '<option value="' . $estudiante['ID_estudiante'] . '">' . htmlspecialchars($estudiante['NombreCompleto']) . '</option>';
-                                                }
-                                                ?>
-                                            </select>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <div class="mb-3">
-                                            <label for="docente" class="form-label">Docente</label>
-                                            <select class="form-select" id="docente" name="ID_docente" required>
-                                                <option value="">Seleccione un Docente</option>
-                                                <?php
-                                                // Cargar docentes dinámicamente
-                                                $docentes = $conn->query("SELECT ID_docente, CONCAT(Nombres, ' ', Apellidos) AS NombreCompleto FROM docentes");
-                                                while ($docente = $docentes->fetch_assoc()) {
-                                                    echo '<option value="' . $docente['ID_docente'] . '">' . htmlspecialchars($docente['NombreCompleto']) . '</option>';
-                                                }
-                                                ?>
-                                            </select>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="mb-3">
-                                    <label for="asignatura" class="form-label">Asignatura</label>
-                                    <input type="text" class="form-control" id="asignatura" name="Asignatura" required>
-                                </div>
-                                <div class="mb-3">
-                                    <label for="nota" class="form-label">Nota</label>
-                                    <input type="number" step="0.01" class="form-control" id="nota" name="Nota"
-                                        required>
-                                </div>
-                                <div class="mb-3">
-                                    <label for="comentarios" class="form-label">Comentarios</label>
-                                    <textarea class="form-control" id="comentarios" name="Comentarios"
-                                        rows="3"></textarea>
-                                </div>
-                            </form>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                            <button type="submit" class="btn btn-primary" form="addNotaForm">
-                                <i class="fas fa-save me-1"></i> Guardar Nota
-                            </button>
-                        </div>
-                    </div>
-                </div>
+            <div class="mb-3">
+                <label for="nota" class="form-label">Nota</label>
+                <input type="number" class="form-control" id="nota" name="Nota" required min="0" max="100">
             </div>
+
+            <div class="mb-3">
+                <label for="asistencia" class="form-label">Asistencia</label>
+                <input type="number" class="form-control" id="asistencia" name="Asistencia" required min="1" max="100">
+            </div>
+
+            </div>
+            <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+            <button type="submit" class="btn btn-success">Guardar Nota</button>
+            </div>
+        </div>
+        </form>
+    </div>
+    </div>
+
 
             <!-- Scripts para el CRUD de Docentes -->
             <script>

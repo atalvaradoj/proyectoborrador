@@ -49,7 +49,7 @@ if (!file_exists("IniciarSesion.php")) {
 
     <!-- Agregar el enlace para recordar contraseña -->
     <div class="remember-password">
-        <a href="recuperar_contraseña.php">¿Olvidaste tu contraseña?</a>
+        <a href="enviar_password.php">¿Olvidaste tu contraseña?</a>
         <p>Si olvidó su contraseña, Click aqui para enviarle una nueva contraseña a su dirección de correo electrónico.</p>
     </div>
 

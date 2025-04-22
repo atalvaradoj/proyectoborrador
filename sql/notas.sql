@@ -11,3 +11,6 @@ CREATE TABLE notas (
 );
 
 SELECT * FROM notas; -- Consulta para verificar el contenido de la tabla notas
+
+ALTER TABLE notas
+MODIFY Asistencia INT NOT NULL;

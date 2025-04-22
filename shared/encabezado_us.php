@@ -1,7 +1,5 @@
 
-<?php
-session_start();
-?>
+
 <?php if (isset($_SESSION['user_id']) && isset($_SESSION['user_name'])): ?>
     <?php
     // Verificar si tiene una foto personalizada

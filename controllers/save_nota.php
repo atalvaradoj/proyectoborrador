@@ -1,28 +1,30 @@
 <?php
-require_once "../includes/db_config.php";
+include '../includes/db_config.php';
+session_start();
+$conn = getConnection();
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+if (isset($_POST['ID_estudiante'], $_POST['Materia'], $_POST['Nota'], $_POST['Asistencia'])) {
     $ID_estudiante = $_POST['ID_estudiante'];
-    $ID_docente = $_POST['ID_docente'];
-    $Asignatura = $_POST['Asignatura'];
+    $Materia = $_POST['Materia'];
     $Nota = $_POST['Nota'];
-    $Comentarios = $_POST['Comentarios'];
+    $Asistencia = $_POST['Asistencia'];
 
-    $conn = getConnection();
-    $sql = "INSERT INTO notas (ID_estudiante, ID_docente, Asignatura, Nota, Comentarios) VALUES (?, ?, ?, ?, ?)";
-    $stmt = $conn->prepare($sql);
-    $stmt->bind_param("iisss", $ID_estudiante, $ID_docente, $Asignatura, $Nota, $Comentarios);
-
-    if ($stmt->execute()) {
-        $_SESSION['success_message'] = "Nota asignada correctamente.";
-    } else {
-        $_SESSION['error_message'] = "Error al asignar la nota.";
+    // Validar rango
+    if ($Asistencia < 1 || $Asistencia > 100) {
+        $_SESSION['error_message'] = "Asistencia debe estar entre 1 y 100.";
+        header("Location: ../registro.php#notas");
+        exit;
     }
 
-    $stmt->close();
-    $conn->close();
+    $stmt = $conn->prepare("INSERT INTO notas (ID_estudiante, Materia, Nota, Asistencia) VALUES (?, ?, ?, ?)");
+    $stmt->bind_param("ssii", $ID_estudiante, $Materia, $Nota, $Asistencia);
 
-    header("Location: ../registro.php#notas");
-    exit();
+    if ($stmt->execute()) {
+        $_SESSION['success_message'] = "Nota registrada correctamente.";
+    } else {
+        $_SESSION['error_message'] = "Error al registrar nota: " . $conn->error;
+    }
 }
-?>
+
+header("Location: ../registro.php#notas");
+exit;

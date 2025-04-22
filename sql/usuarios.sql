@@ -18,6 +18,7 @@ CREATE TABLE IF NOT EXISTS usuarios (
     Correo VARCHAR(100) NOT NULL UNIQUE,
     Rol ENUM('docentes', 'padres' 'admin'),
     Contrasena VARCHAR(255) NULL,
+    telefono VARCHAR(255) NOT NULL,
     Estado ENUM('pendiente', 'aprobado', 'rechazado') DEFAULT 'pendiente'
 ) 
 
