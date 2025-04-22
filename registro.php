@@ -683,7 +683,6 @@
                                 <th>ID</th>
                                 <th>Nombre</th>
                                 <th>Correo</th>
-                                <th>Grado</th>
                                 <th>Foto</th>
                                 <th>Acciones</th>
                             </tr>
@@ -703,7 +702,6 @@
                                         <td><?php echo htmlspecialchars($row['ID_estudiante']); ?></td>
                                         <td><?php echo htmlspecialchars($row['Nombres'] . ' ' . $row['Apellidos']); ?></td>
                                         <td><?php echo htmlspecialchars($row['Correo']); ?></td>
-                                        <td><?php echo htmlspecialchars($row['Grado']); ?></td>
                                         <td><img src="<?php echo htmlspecialchars($photo_url); ?>" alt="Foto" width="50"
                                                 class="rounded-circle"></td>
                                         <td>
@@ -712,7 +710,6 @@
                                                 data-firstname="<?php echo htmlspecialchars($row['Nombres']); ?>"
                                                 data-lastname="<?php echo htmlspecialchars($row['Apellidos']); ?>"
                                                 data-email="<?php echo htmlspecialchars($row['Correo']); ?>"
-                                                data-program="<?php echo htmlspecialchars($row['Grado']); ?>"
                                                 data-bs-toggle="modal" data-bs-target="#editEstudianteModal">
                                                 <i class="fas fa-edit"></i> Editar
                                             </button>
@@ -789,19 +786,6 @@
                                             <input type="email" class="form-control" id="Correo" name="Correo" required>
                                         </div>
                                     </div>
-                                    <div class="col-md-6">
-                                        <div class="mb-3">
-                                            <label for="Grado" class="form-label">Grado</label>
-                                            <select class="form-select" id="Grado" name="Grado" required>
-                                                <option value="Primer_grado">Primero</option>
-                                                <option value="Segundo_grado">Segundo</option>
-                                                <option value="Tercer_grado">Tercero</option>
-                                                <option value="Cuarto_grado">Cuarto</option>
-                                                <option value="Quinto_grado">Quinto</option>
-                                                <option value="Sexto_grado">Sexto</option>
-                                            </select>
-                                        </div>
-                                    </div>
                                 </div>
                                 <div class="mb-3">
                                     <label for="Comentarios" class="form-label">Comentarios</label>
@@ -857,19 +841,6 @@
                                             <label for="editEmail" class="form-label">Correo Electrónico</label>
                                             <input type="email" class="form-control" id="editEmail" name="email"
                                                 required>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <div class="mb-3">
-                                            <label for="editProgram" class="form-label">Grado</label>
-                                            <select class="form-select" id="editProgram" name="program" required>
-                                                <option value="Primer_grado">Primero</option>
-                                                <option value="Segundo_grado">Segundo</option>
-                                                <option value="Tercer_grado">Tercero</option>
-                                                <option value="Cuarto_grado">Cuarto</option>
-                                                <option value="Quinto_grado">Quinto</option>
-                                                <option value="Sexto_grado">Sexto</option>
-                                            </select>
                                         </div>
                                     </div>
                                 </div>

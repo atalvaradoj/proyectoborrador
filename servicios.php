@@ -1,84 +1,143 @@
 <?php include "shared/header.php"; ?>
 
-<!DOCTYPE html>
-<html lang="es">
+<style>
+/* Estilo general para la página */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f9;
+    margin: 0;
+    padding: 0;
+    color: #333;
+}
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Administración Escolar</title>
-    <link href="https://kit.fontawesome.com/97cef9f55a.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <!-- Incluir el archivo CSS exclusivo para servicios -->
-    <link rel="stylesheet" href="css/servicios.css">
-</head>
+h1 {
+    text-align: center;
+    font-size: 2.5rem;
+    margin: 2rem 0;
+    color: #444;
+}
+
+/* Contenedor principal para centrar las secciones */
+.services-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 2rem;
+    padding: 2rem;
+}
+
+/* Estilo para las secciones */
+.section {
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 1.5rem;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    max-width: 300px;
+    text-align: center;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.section:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 10px rgba(0, 0, 0, 0.15);
+}
+
+.section-title {
+    font-size: 1.8rem;
+    margin-bottom: 1rem;
+    color: #007bff;
+}
+
+.section-content {
+    font-size: 1rem;
+    color: #555;
+    margin-bottom: 1.5rem;
+}
+
+.section-content ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+.section-content ul li {
+    margin: 0.5rem 0;
+}
+
+/* Estilo para los íconos */
+.fa-icon {
+    font-size: 3rem;
+    color: #007bff;
+    margin-bottom: 1rem;
+}
+
+/* Estilo para los botones */
+.btn-ir-ahora {
+    display: inline-block;
+    padding: 0.8rem 1.5rem;
+    font-size: 1rem;
+    color: #fff;
+    background-color: #007bff;
+    text-decoration: none;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
+}
+
+.btn-ir-ahora:hover {
+    background-color: #0056b3;
+}
+</style>
 
 <body>
-    <main>
-        <div class="container">
-            <div class="row">
-                <!-- Sección de Comunicación -->
-                <div class="col-md-6 col-lg-4 mb-4">
-                    <div class="section">
-                        <h2 class="section-title">Comunicación</h2>
-                        <div class="section-content">
-                            <i class="fa-solid fa-comments fa-icon"></i>
-                            <ul>
-                                <li>
-                                    <strong>Formulario de Contáctenos</strong>
-                                    Si tienes alguna duda, puedes enviarnos un correo directamente a la Escuela y te
-                                    ayudaremos con tu consulta.
-                                </li>
-                            </ul>
-                            <a href="apicontactenos.php" class="btn-ir-ahora">Ir ahora</a>
-                        </div>
-                    </div>
-                </div>
+    <h1 class="page-title">Servicios</h1>
 
-                <!-- Sección de Pago de Matrícula -->
-                <div class="col-md-6 col-lg-4 mb-4">
-                    <div class="section">
-                        <h2 class="section-title">Pago de Matrícula</h2>
-                        <div class="section-content">
-                            <i class="fa-solid fa-credit-card fa-icon"></i>
-                            <ul>
-                                <li>
-                                    <strong>Gestión de pago de la Matrícula</strong>
-                                    Realiza el pago de tu matrícula en línea.
-                                </li>
-                            </ul>
-                            <a href="pagoMatricula.php" class="btn-ir-ahora">Ir ahora</a>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Sección de Biblioteca y Recursos -->
-                <div class="col-md-6 col-lg-4 mb-4">
-                    <div class="section">
-                        <h2 class="section-title">Biblioteca</h2>
-                        <div class="section-content">
-                            <i class="fa-solid fa-book fa-icon"></i>
-                            <ul>
-                                <li>
-                                    <strong>Catálogo de la biblioteca</strong>
-                                    Consulta nuestra biblioteca en línea.
-                                </li>
-                            </ul>
-                            <a href="biblioteca.php" class="btn-ir-ahora">Ir ahora</a>
-                        </div>
-                    </div>
-                </div>
+    <div class="services-container">
+        <!-- Sección de Comunicación -->
+        <div class="section">
+            <i class="fa-solid fa-comments fa-icon"></i>
+            <h2 class="section-title">Comunicación</h2>
+            <div class="section-content">
+                <ul>
+                    <li>
+                        <strong>Formulario de Contáctenos</strong>
+                        Si tienes alguna duda, puedes enviarnos un correo directamente a la Escuela y te
+                        ayudaremos con tu consulta.
+                    </li>
+                </ul>
+                <a href="apicontactenos.php" class="btn-ir-ahora">Ir ahora</a>
             </div>
         </div>
-    </main>
 
-    <!-- Footer -->
-    <?php include "shared/footer.php"; ?>
+        <!-- Sección de Pago de Matrícula -->
+        <div class="section">
+            <i class="fa-solid fa-credit-card fa-icon"></i>
+            <h2 class="section-title">Pago de Matrícula</h2>
+            <div class="section-content">
+                <ul>
+                    <li>
+                        <strong>Gestión de pago de la Matrícula</strong>
+                        Realiza el pago de tu matrícula en línea.
+                    </li>
+                </ul>
+                <a href="pagoMatricula.php" class="btn-ir-ahora">Ir ahora</a>
+            </div>
+        </div>
 
-    <!-- Bootstrap JS y dependencias -->
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js"></script>
+        <!-- Sección de Biblioteca y Recursos -->
+        <div class="section">
+            <i class="fa-solid fa-book fa-icon"></i>
+            <h2 class="section-title">Biblioteca</h2>
+            <div class="section-content">
+                <ul>
+                    <li>
+                        <strong>Catálogo de la biblioteca</strong>
+                        Consulta nuestra biblioteca en línea.
+                    </li>
+                </ul>
+                <a href="biblioteca.php" class="btn-ir-ahora">Ir ahora</a>
+            </div>
+        </div>
+    </div>
 </body>
 
-</html>
+<?php include "shared/footer.php"; ?>

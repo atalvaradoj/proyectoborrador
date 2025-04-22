@@ -21,8 +21,11 @@ $stmt = $conn->prepare($sql);
 $stmt->bind_param("ssss", $id_usuario, $nombre, $correo, $telefono);
 
 if ($stmt->execute()) {
-    echo "Solicitud enviada correctamente. Un administrador revisará tu solicitud.";
+    // Redirigir al index.php si la solicitud se procesa correctamente
+    header("Location: index.php?mensaje=solicitud_enviada");
+    exit(); // Asegurarse de que el script se detenga después de la redirección
 } else {
+    // Mostrar un mensaje de error si la solicitud no se procesa
     echo "Error al registrar la solicitud: " . $stmt->error;
 }
 

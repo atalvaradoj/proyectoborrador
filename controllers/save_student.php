@@ -7,7 +7,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $nombres = $_POST['Nombres'];
     $apellidos = $_POST['Apellidos'];
     $correo = $_POST['Correo'];
-    $grado = $_POST['Grado'];
     $comentarios = $_POST['Comentarios'];
     $foto_path = '';
 
@@ -37,10 +36,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             }
 
             // Insertar datos del estudiante en la base de datos
-            $sql = "INSERT INTO estudiantes (ID_estudiante, Nombres, Apellidos, Correo, Grado, Comentarios, Foto) 
-                    VALUES (?, ?, ?, ?, ?, ?, ?)";
+            $sql = "INSERT INTO estudiantes (ID_estudiante, Nombres, Apellidos, Correo, Comentarios, Foto) 
+                    VALUES (?, ?, ?, ?, ?, ?)";
             $stmt = $conn->prepare($sql);
-            $stmt->bind_param("sssssss", $id_estudiante, $nombres, $apellidos, $correo, $grado, $comentarios, $foto_path);
+            $stmt->bind_param("ssssss", $id_estudiante, $nombres, $apellidos, $correo, $comentarios, $foto_path);
 
             if ($stmt->execute()) {
                 $_SESSION['success_message'] = "Estudiante agregado correctamente.";
