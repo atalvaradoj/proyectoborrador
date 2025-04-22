@@ -35,13 +35,24 @@ session_start();
             margin-left: 270px; /* Espacio para la barra lateral */
             padding: 20px;
         }
+        @media (max-width: 768px) {
+            .sidebar {
+                position: relative;
+                width: 100%;
+                height: auto;
+                box-shadow: none;
+            }
+            .content {
+                margin-left: 0;
+            }
+        }
     </style>
     <link rel="stylesheet" href="css/main.css">
 </head>
 <body>
     <!-- Botón de Cerrar Sesión -->
     <?php if (basename($_SERVER['PHP_SELF']) !== 'index.php' && isset($_SESSION['user_id'])): ?>
-        <div class="logout-container">
+        <div class="logout-container text-end p-2">
             <link rel="stylesheet" href="css/logout.css">
             <button class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#logoutModal">
                 Cerrar Sesión
@@ -69,13 +80,13 @@ session_start();
     </div>
 
     <?php if (basename($_SERVER['PHP_SELF']) !== 'index.php' && isset($_SESSION['user_id'])): ?>
-    <div class="profile-edit-container">
+    <div class="profile-edit-container text-end p-2">
         <link rel="stylesheet" href="css/logout.css">
         <button class="btn btn-primary btn-sm" onclick="window.location.href='editar_perfil.php'">
             <?php echo htmlspecialchars($_SESSION['user_name']); ?>
         </button>
     </div>
-<?php endif; ?>
+    <?php endif; ?>
     
     <!-- Barra lateral -->
     <div class="sidebar">
@@ -89,7 +100,7 @@ session_start();
                     <a class="nav-link" href="Admin_Aprobar_Solicitudes.php">Aprobar Solicitud</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="editar_info_personal.php">Editar informacion personal</a>
+                    <a class="nav-link" href="editar_info_personal.php">Editar información personal</a>
                 </li>
             <?php else: ?>
                 <li class="nav-item">

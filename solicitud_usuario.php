@@ -94,7 +94,7 @@
         <label for="telefono">Teléfono:</label>
         <input type="text" name="telefono" required>
 
-        <button type="submit">Enviar Solicitud</button>
+        <button type="submit" href="index.php">Enviar Solicitud</button>
     </form>
 </body>
 </html>

@@ -1,5 +1,4 @@
 <?php
-include "shared/encabezado_us.php";
 include "shared/header.php";
 
 require_once "includes/db_config.php";
