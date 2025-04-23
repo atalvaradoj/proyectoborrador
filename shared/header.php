@@ -109,6 +109,16 @@ session_start();
                 <li class="nav-item">
                     <a class="nav-link" href="editar_info_personal.php">Editar Información Personal</a>
                 </li>
+                <?php elseif ($_SESSION['user_role'] === 'admin'): ?>
+                <li class="nav-item">
+                    <a class="nav-link" href="reportes.php">Generar Reporte</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="editar_info_personal.php">Editar Información Personal</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="registro.php">Agregar Notas</a>
+                </li>
             <?php endif; ?>
         <?php else: ?>
             <li class="nav-item">
