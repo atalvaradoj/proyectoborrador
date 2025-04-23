@@ -117,7 +117,7 @@
         <button type="submit">Enviar Solicitud</button>
     </form>
 
-    <?php include "shared/footer.php"; ?>
+    
 </body>
 
 

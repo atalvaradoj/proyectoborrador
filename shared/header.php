@@ -117,7 +117,7 @@ session_start();
                     <a class="nav-link" href="editar_info_personal.php">Editar Información Personal</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="registro.php">Agregar Notas</a>
+                    <a class="nav-link" href="registro.php">Registro</a>
                 </li>
             <?php endif; ?>
         <?php else: ?>
