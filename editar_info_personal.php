@@ -1,14 +1,20 @@
 <?php
-include "shared/encabezado_us.php";
+
 include "shared/header.php";
 
 require_once "includes/db_config.php";
 
+
+if (!isset($_SESSION['user_id'])) {
+    header("Location: login.php");
+    exit;
+}
 // Verificar sesión y rol
-if (!isset($_SESSION['user_id']) || !in_array($_SESSION['user_role'], ['padre', 'admin'])) {
+if (!isset($_SESSION['user_id']) || !in_array($_SESSION['user_role'], ['padres', 'docentes', 'admin'])) {
     header("Location: index.php");
     exit;
 }
+
 
 $conn = getConnection();
 $userId = $_SESSION['user_id'];

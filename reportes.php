@@ -1,5 +1,7 @@
+<?php include "shared/header.php"; ?>
+
 <?php
-session_start();
+
 include 'includes/db_config.php';
 $conn = getConnection();
 
@@ -136,3 +138,4 @@ $notas = $notasQuery->get_result();
 
 </body>
 </html>
+<?php include "shared/footer.php"; ?>

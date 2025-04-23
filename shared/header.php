@@ -91,41 +91,45 @@ session_start();
     </div>
 
     <!-- Barra lateral -->
-    <div class="sidebar">
-        <h4 class="text-center">Sistema Escolar</h4>
-        <ul class="nav flex-column">
-            <?php if (isset($_SESSION['user_id'])): ?>
+<div class="sidebar">
+    <h4 class="text-center">Sistema Escolar</h4>
+    <ul class="nav flex-column">
+        <?php if (isset($_SESSION['user_id'])): ?>
+            <?php if ($_SESSION['user_role'] === 'docentes'): ?>
                 <li class="nav-item">
-                    <a class="nav-link" href="registro.php">Registro</a>
+                    <a class="nav-link" href="registro.php">Agregar Notas</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="Admin_Aprobar_Solicitudes.php">Aprobar Solicitud</a>
+                    <a class="nav-link" href="editar_info_personal.php">Editar Información Personal</a>
+                </li>
+            <?php elseif ($_SESSION['user_role'] === 'padres'): ?>
+                <li class="nav-item">
+                    <a class="nav-link" href="reportes.php">Generar Reporte</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="editar_info_personal.php">Editar información personal</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="reportes.php">Generar reporte</a>
-                </li>
-            <?php else: ?>
-                <li class="nav-item">
-                    <a class="nav-link" href="index.php">Identificarse</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="apicontactenos.php">Mapa</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="interes.php">¿Por qué elegirnos?</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="testimonios.php">Testimonios</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="servicios.php">Servicios</a>
+                    <a class="nav-link" href="editar_info_personal.php">Editar Información Personal</a>
                 </li>
             <?php endif; ?>
-        </ul>
-    </div>
+        <?php else: ?>
+            <li class="nav-item">
+                <a class="nav-link" href="index.php">Identificarse</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="apicontactenos.php">Mapa</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="interes.php">¿Por qué elegirnos?</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="testimonios.php">Testimonios</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="servicios.php">Servicios</a>
+            </li>
+        <?php endif; ?>
+    </ul>
+</div>
+
 
     <!-- Agregar Bootstrap JS y dependencias -->
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
